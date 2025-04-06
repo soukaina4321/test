@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psychological Tests | Resilience & Anxiety</title>
+    <style>
+        :root {
+            --primary: #5e35b1;
+            --secondary: #3949ab;
+            --accent: #7c4dff;
+            --light: #f5f3ff;
+            --dark: #1a237e;
+            --success: #26a69a;
+            --danger: #ef5350;
+            --border-radius: 12px;
+            --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #f5f7ff;
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .test-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        .test-btn {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            flex: 1;
+            text-align: center;
+            max-width: 200px;
+        }
+
+        .test-btn:hover, .test-btn.active {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .test-container {
+            padding: 30px;
+            display: none;
+        }
+
+        .test-container.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .progress-container {
+            margin-bottom: 30px;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+            width: 0%;
+            transition: var(--transition);
+        }
+
+        .question {
+            margin-bottom: 25px;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            background-color: var(--light);
+            display: none;
+        }
+
+        .question.active {
+            display: block;
+            animation: slideIn 0.4s;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(10px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .rating-scale {
+            display: flex;
+            justify-content: space-between;
+            margin: 15px 0;
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .radio-options {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .radio-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        input[type="radio"] {
+            appearance: none;
+            width: 22px;
+            height: 22px;
+            border: 2px solid #ced4da;
+            border-radius: 50%;
+            margin-bottom: 5px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        input[type="radio"]:checked {
+            border-color: var(--primary);
+            background-color: var(--primary);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: var(--transition);
+            display: block;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(94, 53, 177, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .result-container {
+            display: none;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .result-score {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+
+        .resilience-score {
+            color: var(--primary);
+        }
+
+        .anxiety-score {
+            color: var(--danger);
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+
+        .result-details {
+            background-color: var(--light);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .score-calculation {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f2f5;
+            border-radius: 8px;
+            font-size: 0.9rem;
+        }
+
+        .score-calculation h4 {
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .score-details {
+            margin-top: 10px;
+            font-family: monospace;
+        }
+
+        .restart-btn {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            margin-top: 30px;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            padding: 20px;
+        }
+
+        @media (max-width: 600px) {
+            .test-selector {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .test-btn {
+                width: 100%;
+                max-width: none;
+            }
+            
+            .radio-options {
+                flex-wrap: wrap;
+            }
+            
+            .radio-option {
+                min-width: 20%;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Psychological Tests</h1>
+            <p>Assess your resilience and anxiety levels</p>
+        </header>
+
+        <div class="test-selector">
+            <button class="test-btn active" id="resilienceBtn">Resilience Test</button>
+            <button class="test-btn" id="anxietyBtn">Anxiety Test</button>
+        </div>
+
+        <!-- Resilience Test (6 questions) -->
+        <div class="test-container active" id="resilienceTest">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="resilienceProgress"></div>
+                </div>
+                <div id="resilienceProgressText">Question 1 of 6</div>
+            </div>
+
+            <form id="resilienceForm">
+                <!-- Question 1 -->
+                <div class="question active" id="resilienceQ1">
+                    <div class="question-text">1. I remain calm under pressure.</div>
+                    <div class="rating-scale">
+                        <span>Strongly disagree</span>
+                        <span>Strongly agree</span>
+                    </div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="rq1" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq1" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq1" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq1" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq1" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question" id="resilienceQ2">
+                    <div class="question-text">2. I recover quickly from failures or difficulties.</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="rq2" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq2" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq2" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq2" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq2" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="question" id="resilienceQ3">
+                    <div class="question-text">3. I adapt easily to changes.</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="rq3" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq3" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq3" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq3" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq3" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="question" id="resilienceQ4">
+                    <div class="question-text">4. I find creative solutions to problems.</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="rq4" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq4" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq4" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq4" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq4" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="question" id="resilienceQ5">
+                    <div class="question-text">5. I maintain hope even in difficult situations.</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="rq5" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq5" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq5" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq5" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq5" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 6 (reversed) -->
+                <div class="question" id="resilienceQ6">
+                    <div class="question-text">6. I get overwhelmed by problems. (reversed)</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="rq6" value="5" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq6" value="4">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq6" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq6" value="2">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="rq6" value="1">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <button type="button" class="btn" id="resilienceNextBtn">Next Question</button>
+                <button type="submit" class="btn" id="resilienceSubmitBtn" style="display: none;">View Results</button>
+            </form>
+        </div>
+
+        <!-- Anxiety Test (6 questions) -->
+        <div class="test-container" id="anxietyTest">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="anxietyProgress"></div>
+                </div>
+                <div id="anxietyProgressText">Question 1 of 6</div>
+            </div>
+
+            <form id="anxietyForm">
+                <!-- Question 1 -->
+                <div class="question active" id="anxietyQ1">
+                    <div class="question-text">1. I feel tense or nervous.</div>
+                    <div class="rating-scale">
+                        <span>Never</span>
+                        <span>Always</span>
+                    </div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="aq1" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq1" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq1" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq1" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq1" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="question" id="anxietyQ2">
+                    <div class="question-text">2. I worry excessively.</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="aq2" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq2" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq2" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq2" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq2" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="question" id="anxietyQ3">
+                    <div class="question-text">3. I have trouble relaxing.</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="aq3" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq3" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq3" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq3" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq3" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="question" id="anxietyQ4">
+                    <div class="question-text">4. I feel afraid without apparent reason.</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="aq4" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq4" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq4" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq4" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq4" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 5 -->
+                <div class="question" id="anxietyQ5">
+                    <div class="question-text">5. I feel restless or on edge.</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="aq5" value="1" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq5" value="2">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq5" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq5" value="4">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq5" value="5">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Question 6 (reversed) -->
+                <div class="question" id="anxietyQ6">
+                    <div class="question-text">6. I feel calm and peaceful. (reversed)</div>
+                    <div class="radio-options">
+                        <label class="radio-option">
+                            <input type="radio" name="aq6" value="5" required>
+                            1
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq6" value="4">
+                            2
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq6" value="3">
+                            3
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq6" value="2">
+                            4
+                        </label>
+                        <label class="radio-option">
+                            <input type="radio" name="aq6" value="1">
+                            5
+                        </label>
+                    </div>
+                </div>
+
+                <button type="button" class="btn" id="anxietyNextBtn">Next Question</button>
+                <button type="submit" class="btn" id="anxietySubmitBtn" style="display: none;">View Results</button>
+            </form>
+        </div>
+
+        <!-- Resilience Results -->
+        <div class="result-container" id="resilienceResult">
+            <h2>Your Resilience Score</h2>
+            <div class="result-score resilience-score" id="resilienceFinalScore"></div>
+            <div class="result-message" id="resilienceMessage"></div>
+            <div class="result-details">
+                <p id="resilienceDetails"></p>
+                
+                <div class="score-calculation">
+                    <h4>How your score is calculated:</h4>
+                    <p>6 questions, total score between 6 and 30 points:</p>
+                    <ul>
+                        <li>Questions 1-5: 1 (Strongly disagree) → 5 (Strongly agree)</li>
+                        <li>Question 6 (reversed): 1 → 5 points, 2 → 4 points, etc.</li>
+                    </ul>
+                    <div class="score-details" id="resilienceScoreDetails"></div>
+                </div>
+                
+                <p><strong>Note:</strong> This test is based on the Connor-Davidson Resilience Scale (CD-RISC).</p>
+            </div>
+            <button class="btn restart-btn" id="resilienceRestartBtn">Retake Test</button>
+        </div>
+
+        <!-- Anxiety Results -->
+        <div class="result-container" id="anxietyResult">
+            <h2>Your Anxiety Score</h2>
+            <div class="result-score anxiety-score" id="anxietyFinalScore"></div>
+            <div class="result-message" id="anxietyMessage"></div>
+            <div class="result-details">
+                <p id="anxietyDetails"></p>
+                
+                <div class="score-calculation">
+                    <h4>How your score is calculated:</h4>
+                    <p>6 questions, total score between 6 and 30 points:</p>
+                    <ul>
+                        <li>Questions 1-5: 1 (Never) → 5 (Always)</li>
+                        <li>Question 6 (reversed): 1 → 5 points, 2 → 4 points, etc.</li>
+                    </ul>
+                    <div class="score-details" id="anxietyScoreDetails"></div>
+                </div>
+                
+                <p><strong>Note:</strong> This test is inspired by the GAD-7 (Generalized Anxiety Disorder Scale).</p>
+            </div>
+            <button class="btn restart-btn" id="anxietyRestartBtn">Retake Test</button>
+        </div>
+
+        <footer>
+            <p>© 2023 Psychological Tests | These tests are for informational purposes only</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Test navigation
+            const resilienceBtn = document.getElementById('resilienceBtn');
+            const anxietyBtn = document.getElementById('anxietyBtn');
+            const resilienceTest = document.getElementById('resilienceTest');
+            const anxietyTest = document.getElementById('anxietyTest');
+
+            function switchTest(activeTest) {
+                // Hide all tests and results
+                document.querySelectorAll('.test-container, .result-container').forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                // Deactivate all test buttons
+                resilienceBtn.classList.remove('active');
+                anxietyBtn.classList.remove('active');
+                
+                if (activeTest === 'resilience') {
+                    // Show resilience test
+                    resilienceTest.style.display = 'block';
+                    resilienceBtn.classList.add('active');
+                    initTest('resilience');
+                } else {
+                    // Show anxiety test
+                    anxietyTest.style.display = 'block';
+                    anxietyBtn.classList.add('active');
+                    initTest('anxiety');
+                }
+            }
+
+            resilienceBtn.addEventListener('click', () => switchTest('resilience'));
+            anxietyBtn.addEventListener('click', () => switchTest('anxiety'));
+
+            // Initialize a test
+            function initTest(testType) {
+                const form = document.getElementById(`${testType}Form`);
+                const questions = Array.from(form.querySelectorAll('.question'));
+                const nextBtn = document.getElementById(`${testType}NextBtn`);
+                const submitBtn = document.getElementById(`${testType}SubmitBtn`);
+                const progressBar = document.getElementById(`${testType}Progress`);
+                const progressText = document.getElementById(`${testType}ProgressText`);
+                
+                let currentQuestionIndex = 0;
+
+                // Show first question
+                showQuestion(currentQuestionIndex);
+
+                function showQuestion(index) {
+                    // Hide all questions
+                    questions.forEach(q => q.style.display = 'none');
+                    
+                    // Show current question
+                    questions[index].style.display = 'block';
+                    questions[index].classList.add('active');
+                    
+                    // Update progress
+                    const progressPercent = ((index + 1) / questions.length) * 100;
+                    progressBar.style.width = `${progressPercent}%`;
+                    progressText.textContent = `Question ${index + 1} of ${questions.length}`;
+                    
+                    // Handle button display
+                    if (index === questions.length - 1) {
+                        nextBtn.style.display = 'none';
+                        submitBtn.style.display = 'block';
+                    } else {
+                        nextBtn.style.display = 'block';
+                        submitBtn.style.display = 'none';
+                    }
+                }
+
+                // Next question button
+                nextBtn.addEventListener('click', function() {
+                    const currentQuestion = questions[currentQuestionIndex];
+                    const selectedOption = currentQuestion.querySelector('input[type="radio"]:checked');
+                    
+                    if (!selectedOption) {
+                        alert('Please select an answer before continuing.');
+                        return;
+                    }
+                    
+                    currentQuestionIndex++;
+                    showQuestion(currentQuestionIndex);
+                });
+
+                // Form submission
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    calculateScore(testType);
+                });
+            }
+
+            // Calculate score
+            function calculateScore(testType) {
+                const form = document.getElementById(`${testType}Form`);
+                const inputs = form.querySelectorAll('input[type="radio"]:checked');
+                let score = 0;
+                let scoreDetails = [];
+                
+                inputs.forEach((input, index) => {
+                    let questionValue = parseInt(input.value);
+                    let originalValue = questionValue;
+                    
+                    // Reversed questions (Q6 for both tests)
+                    if ((testType === 'resilience' && index === 5) || 
+                        (testType === 'anxiety' && index === 5)) {
+                        questionValue = 6 - questionValue; // Reverse 1→5, 2→4, etc.
+                        scoreDetails.push(`Q${index+1}: ${originalValue} → ${questionValue} pts (reversed)`);
+                    } else {
+                        scoreDetails.push(`Q${index+1}: ${questionValue} pts`);
+                    }
+                    
+                    score += questionValue;
+                });
+
+                showResults(testType, score, scoreDetails);
+            }
+
+            // Show results
+            function showResults(testType, score, scoreDetails) {
+                const testContainer = document.getElementById(`${testType}Test`);
+                const resultContainer = document.getElementById(`${testType}Result`);
+                const finalScore = document.getElementById(`${testType}FinalScore`);
+                const message = document.getElementById(`${testType}Message`);
+                const details = document.getElementById(`${testType}Details`);
+                
+                // Hide test and show results
+                testContainer.style.display = 'none';
+                resultContainer.style.display = 'block';
+                
+                // Display score
+                finalScore.textContent = score;
+                
+                // Display calculation details
+                document.getElementById(`${testType}ScoreDetails`).innerHTML = scoreDetails.join('<br>');
+                
+                // Interpret results
+                if (testType === 'resilience') {
+                    if (score >= 25) {
+                        message.textContent = 'High Resilience';
+                        details.querySelector('#resilienceDetails').textContent = 'You demonstrate excellent ability to face challenges and bounce back from difficulties. This psychological strength serves you well in daily life.';
+                    } else if (score >= 16) {
+                        message.textContent = 'Moderate Resilience';
+                        details.querySelector('#resilienceDetails').textContent = 'You generally handle stress well, but some situations may still unsettle you. Continue developing your coping strategies.';
+                    } else {
+                        message.textContent = 'Low Resilience';
+                        details.querySelector('#resilienceDetails').textContent = 'You may struggle with stress and challenges. Consider relaxation techniques or speaking with a professional to strengthen your coping skills.';
+                    }
+                } else { // Anxiety test
+                    if (score >= 20) {
+                        message.textContent = 'High Anxiety';
+                        details.querySelector('#anxietyDetails').textContent = 'Your anxiety level seems high. If this affects your daily life, it would be beneficial to speak with a healthcare professional.';
+                    } else if (score >= 10) {
+                        message.textContent = 'Moderate Anxiety';
+                        details.querySelector('#anxietyDetails').textContent = 'You experience some anxiety, but it seems manageable. Relaxation techniques could help you better manage your stress.';
+                    } else {
+                        message.textContent = 'Low Anxiety';
+                        details.querySelector('#anxietyDetails').textContent = 'Your anxiety level is low. You seem to handle daily stress well.';
+                    }
+                }
+            }
+
+            // Restart buttons
+            document.getElementById('resilienceRestartBtn').addEventListener('click', function() {
+                resetTest('resilience');
+            });
+            
+            document.getElementById('anxietyRestartBtn').addEventListener('click', function() {
+                resetTest('anxiety');
+            });
+
+            function resetTest(testType) {
+                const form = document.getElementById(`${testType}Form`);
+                const testContainer = document.getElementById(`${testType}Test`);
+                const resultContainer = document.getElementById(`${testType}Result`);
+                
+                // Reset form
+                form.reset();
+                
+                // Hide results and show test
+                resultContainer.style.display = 'none';
+                testContainer.style.display = 'block';
+                
+                // Reset progress
+                initTest(testType);
+            }
+
+            // Initialize resilience test on load
+            switchTest('resilience');
+        });
+    </script>
+</body>
+</html>
