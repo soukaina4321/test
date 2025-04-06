@@ -251,11 +251,33 @@
             font-family: monospace;
         }
 
+        .advice-container {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            margin: 20px 0;
+            text-align: left;
+        }
+
+        .advice-container h3 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .advice-container ul {
+            padding-left: 20px;
+            margin-top: 10px;
+        }
+
+        .advice-container li {
+            margin-bottom: 8px;
+        }
+
         .restart-btn {
             background: white;
             color: var(--primary);
             border: 2px solid var(--primary);
-            margin-top: 30px;
+            margin-top: 20px;
         }
 
         footer {
@@ -680,7 +702,10 @@
                     <div class="score-details" id="resilienceScoreDetails"></div>
                 </div>
                 
-                <p><strong>Note:</strong> This test is based on the Connor-Davidson Resilience Scale (CD-RISC).</p>
+                <div class="advice-container">
+                    <h3>Personalized Advice</h3>
+                    <div id="resilienceAdvice"></div>
+                </div>
             </div>
             <button class="btn restart-btn" id="resilienceRestartBtn">Retake Test</button>
         </div>
@@ -703,7 +728,10 @@
                     <div class="score-details" id="anxietyScoreDetails"></div>
                 </div>
                 
-                <p><strong>Note:</strong> This test is inspired by the GAD-7 (Generalized Anxiety Disorder Scale).</p>
+                <div class="advice-container">
+                    <h3>Personalized Advice</h3>
+                    <div id="anxietyAdvice"></div>
+                </div>
             </div>
             <button class="btn restart-btn" id="anxietyRestartBtn">Retake Test</button>
         </div>
@@ -838,6 +866,7 @@
                 const finalScore = document.getElementById(`${testType}FinalScore`);
                 const message = document.getElementById(`${testType}Message`);
                 const details = document.getElementById(`${testType}Details`);
+                const adviceElement = document.getElementById(`${testType}Advice`);
                 
                 // Hide test and show results
                 testContainer.style.display = 'none';
@@ -853,24 +882,78 @@
                 if (testType === 'resilience') {
                     if (score >= 25) {
                         message.textContent = 'High Resilience';
-                        details.querySelector('#resilienceDetails').textContent = 'You demonstrate excellent ability to face challenges and bounce back from difficulties. This psychological strength serves you well in daily life.';
+                        details.textContent = 'You demonstrate excellent ability to face challenges and bounce back from difficulties. This psychological strength serves you well in daily life.';
+                        adviceElement.innerHTML = `
+                            <p><strong>To maintain your excellent resilience:</strong></p>
+                            <ul>
+                                <li>Continue practicing stress management techniques</li>
+                                <li>Share your coping strategies with others</li>
+                                <li>Take on new challenges to continue growing</li>
+                                <li>Practice gratitude daily</li>
+                            </ul>
+                        `;
                     } else if (score >= 16) {
                         message.textContent = 'Moderate Resilience';
-                        details.querySelector('#resilienceDetails').textContent = 'You generally handle stress well, but some situations may still unsettle you. Continue developing your coping strategies.';
+                        details.textContent = 'You generally handle stress well, but some situations may still unsettle you. Continue developing your coping strategies.';
+                        adviceElement.innerHTML = `
+                            <p><strong>To improve your resilience:</strong></p>
+                            <ul>
+                                <li>Practice mindfulness for 10 minutes daily</li>
+                                <li>Identify negative thoughts and reframe them</li>
+                                <li>Develop a strong social support network</li>
+                                <li>Accept failure as a learning opportunity</li>
+                            </ul>
+                        `;
                     } else {
                         message.textContent = 'Low Resilience';
-                        details.querySelector('#resilienceDetails').textContent = 'You may struggle with stress and challenges. Consider relaxation techniques or speaking with a professional to strengthen your coping skills.';
+                        details.textContent = 'You may struggle with stress and challenges. Consider relaxation techniques or speaking with a professional to strengthen your coping skills.';
+                        adviceElement.innerHTML = `
+                            <p><strong>To build your resilience:</strong></p>
+                            <ul>
+                                <li>Start with small, manageable challenges</li>
+                                <li>Practice deep breathing exercises</li>
+                                <li>Identify your stress triggers</li>
+                                <li>Seek professional help if needed</li>
+                            </ul>
+                        `;
                     }
                 } else { // Anxiety test
                     if (score >= 20) {
                         message.textContent = 'High Anxiety';
-                        details.querySelector('#anxietyDetails').textContent = 'Your anxiety level seems high. If this affects your daily life, it would be beneficial to speak with a healthcare professional.';
+                        details.textContent = 'Your anxiety level seems high. If this affects your daily life, it would be beneficial to speak with a healthcare professional.';
+                        adviceElement.innerHTML = `
+                            <p><strong>To manage your anxiety:</strong></p>
+                            <ul>
+                                <li>Consult a mental health professional</li>
+                                <li>Practice breathing exercises daily</li>
+                                <li>Limit caffeine and ensure adequate sleep</li>
+                                <li>Try the 5-4-3-2-1 grounding technique</li>
+                            </ul>
+                        `;
                     } else if (score >= 10) {
                         message.textContent = 'Moderate Anxiety';
-                        details.querySelector('#anxietyDetails').textContent = 'You experience some anxiety, but it seems manageable. Relaxation techniques could help you better manage your stress.';
+                        details.textContent = 'You experience some anxiety, but it seems manageable. Relaxation techniques could help you better manage your stress.';
+                        adviceElement.innerHTML = `
+                            <p><strong>To reduce your anxiety:</strong></p>
+                            <ul>
+                                <li>Try yoga or meditation</li>
+                                <li>Keep a worry journal</li>
+                                <li>Engage in regular physical activity</li>
+                                <li>Practice square breathing technique</li>
+                            </ul>
+                        `;
                     } else {
                         message.textContent = 'Low Anxiety';
-                        details.querySelector('#anxietyDetails').textContent = 'Your anxiety level is low. You seem to handle daily stress well.';
+                        details.textContent = 'Your anxiety level is low. You seem to handle daily stress well.';
+                        adviceElement.innerHTML = `
+                            <p><strong>To maintain your well-being:</strong></p>
+                            <ul>
+                                <li>Continue your good stress management habits</li>
+                                <li>Be mindful of early stress signs</li>
+                                <li>Maintain work-life balance</li>
+                                <li>Practice preventive relaxation techniques</li>
+                            </ul>
+                        `;
                     }
                 }
             }
