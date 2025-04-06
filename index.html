@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psychological Tests | Resilience & Anxiety</title>
+    <title>Psychological Tests | EQ & Anxiety</title>
     <style>
         :root {
             --primary: #5e35b1;
@@ -212,7 +212,7 @@
             margin: 20px 0;
         }
 
-        .resilience-score {
+        .eq-score {
             color: var(--primary);
         }
 
@@ -314,192 +314,192 @@
     <div class="container">
         <header>
             <h1>Psychological Tests</h1>
-            <p>Assess your resilience and anxiety levels</p>
+            <p>Assess your emotional intelligence and anxiety levels</p>
         </header>
 
         <div class="test-selector">
-            <button class="test-btn active" id="resilienceBtn">Resilience Test</button>
+            <button class="test-btn active" id="eqBtn">EQ Test</button>
             <button class="test-btn" id="anxietyBtn">Anxiety Test</button>
         </div>
 
-        <!-- Resilience Test (6 questions) -->
-        <div class="test-container active" id="resilienceTest">
+        <!-- Emotional Intelligence Test (6 questions) -->
+        <div class="test-container active" id="eqTest">
             <div class="progress-container">
                 <div class="progress-bar">
-                    <div class="progress" id="resilienceProgress"></div>
+                    <div class="progress" id="eqProgress"></div>
                 </div>
-                <div id="resilienceProgressText">Question 1 of 6</div>
+                <div id="eqProgressText">Question 1 of 6</div>
             </div>
 
-            <form id="resilienceForm">
+            <form id="eqForm">
                 <!-- Question 1 -->
-                <div class="question active" id="resilienceQ1">
-                    <div class="question-text">1. I remain calm under pressure.</div>
+                <div class="question active" id="eqQ1">
+                    <div class="question-text">1. I can easily identify my emotions as I experience them.</div>
                     <div class="rating-scale">
                         <span>Strongly disagree</span>
                         <span>Strongly agree</span>
                     </div>
                     <div class="radio-options">
                         <label class="radio-option">
-                            <input type="radio" name="rq1" value="1" required>
+                            <input type="radio" name="eq1" value="1" required>
                             1
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq1" value="2">
+                            <input type="radio" name="eq1" value="2">
                             2
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq1" value="3">
+                            <input type="radio" name="eq1" value="3">
                             3
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq1" value="4">
+                            <input type="radio" name="eq1" value="4">
                             4
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq1" value="5">
+                            <input type="radio" name="eq1" value="5">
                             5
                         </label>
                     </div>
                 </div>
 
                 <!-- Question 2 -->
-                <div class="question" id="resilienceQ2">
-                    <div class="question-text">2. I recover quickly from failures or difficulties.</div>
+                <div class="question" id="eqQ2">
+                    <div class="question-text">2. I understand how my emotions affect my behavior.</div>
                     <div class="radio-options">
                         <label class="radio-option">
-                            <input type="radio" name="rq2" value="1" required>
+                            <input type="radio" name="eq2" value="1" required>
                             1
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq2" value="2">
+                            <input type="radio" name="eq2" value="2">
                             2
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq2" value="3">
+                            <input type="radio" name="eq2" value="3">
                             3
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq2" value="4">
+                            <input type="radio" name="eq2" value="4">
                             4
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq2" value="5">
+                            <input type="radio" name="eq2" value="5">
                             5
                         </label>
                     </div>
                 </div>
 
                 <!-- Question 3 -->
-                <div class="question" id="resilienceQ3">
-                    <div class="question-text">3. I adapt easily to changes.</div>
+                <div class="question" id="eqQ3">
+                    <div class="question-text">3. I can recognize emotions in other people.</div>
                     <div class="radio-options">
                         <label class="radio-option">
-                            <input type="radio" name="rq3" value="1" required>
+                            <input type="radio" name="eq3" value="1" required>
                             1
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq3" value="2">
+                            <input type="radio" name="eq3" value="2">
                             2
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq3" value="3">
+                            <input type="radio" name="eq3" value="3">
                             3
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq3" value="4">
+                            <input type="radio" name="eq3" value="4">
                             4
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq3" value="5">
+                            <input type="radio" name="eq3" value="5">
                             5
                         </label>
                     </div>
                 </div>
 
                 <!-- Question 4 -->
-                <div class="question" id="resilienceQ4">
-                    <div class="question-text">4. I find creative solutions to problems.</div>
+                <div class="question" id="eqQ4">
+                    <div class="question-text">4. I manage my emotions appropriately in difficult situations.</div>
                     <div class="radio-options">
                         <label class="radio-option">
-                            <input type="radio" name="rq4" value="1" required>
+                            <input type="radio" name="eq4" value="1" required>
                             1
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq4" value="2">
+                            <input type="radio" name="eq4" value="2">
                             2
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq4" value="3">
+                            <input type="radio" name="eq4" value="3">
                             3
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq4" value="4">
+                            <input type="radio" name="eq4" value="4">
                             4
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq4" value="5">
+                            <input type="radio" name="eq4" value="5">
                             5
                         </label>
                     </div>
                 </div>
 
                 <!-- Question 5 -->
-                <div class="question" id="resilienceQ5">
-                    <div class="question-text">5. I maintain hope even in difficult situations.</div>
+                <div class="question" id="eqQ5">
+                    <div class="question-text">5. I use emotional understanding to improve my relationships.</div>
                     <div class="radio-options">
                         <label class="radio-option">
-                            <input type="radio" name="rq5" value="1" required>
+                            <input type="radio" name="eq5" value="1" required>
                             1
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq5" value="2">
+                            <input type="radio" name="eq5" value="2">
                             2
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq5" value="3">
+                            <input type="radio" name="eq5" value="3">
                             3
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq5" value="4">
+                            <input type="radio" name="eq5" value="4">
                             4
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq5" value="5">
+                            <input type="radio" name="eq5" value="5">
                             5
                         </label>
                     </div>
                 </div>
 
                 <!-- Question 6 (reversed) -->
-                <div class="question" id="resilienceQ6">
-                    <div class="question-text">6. I get overwhelmed by problems. (reversed)</div>
+                <div class="question" id="eqQ6">
+                    <div class="question-text">6. I often feel overwhelmed by my emotions. (reversed)</div>
                     <div class="radio-options">
                         <label class="radio-option">
-                            <input type="radio" name="rq6" value="5" required>
+                            <input type="radio" name="eq6" value="5" required>
                             1
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq6" value="4">
+                            <input type="radio" name="eq6" value="4">
                             2
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq6" value="3">
+                            <input type="radio" name="eq6" value="3">
                             3
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq6" value="2">
+                            <input type="radio" name="eq6" value="2">
                             4
                         </label>
                         <label class="radio-option">
-                            <input type="radio" name="rq6" value="1">
+                            <input type="radio" name="eq6" value="1">
                             5
                         </label>
                     </div>
                 </div>
 
-                <button type="button" class="btn" id="resilienceNextBtn">Next Question</button>
-                <button type="submit" class="btn" id="resilienceSubmitBtn" style="display: none;">View Results</button>
+                <button type="button" class="btn" id="eqNextBtn">Next Question</button>
+                <button type="submit" class="btn" id="eqSubmitBtn" style="display: none;">View Results</button>
             </form>
         </div>
 
@@ -684,13 +684,13 @@
             </form>
         </div>
 
-        <!-- Resilience Results -->
-        <div class="result-container" id="resilienceResult">
-            <h2>Your Resilience Score</h2>
-            <div class="result-score resilience-score" id="resilienceFinalScore"></div>
-            <div class="result-message" id="resilienceMessage"></div>
+        <!-- EQ Results -->
+        <div class="result-container" id="eqResult">
+            <h2>Your Emotional Intelligence Score</h2>
+            <div class="result-score eq-score" id="eqFinalScore"></div>
+            <div class="result-message" id="eqMessage"></div>
             <div class="result-details">
-                <p id="resilienceDetails"></p>
+                <p id="eqDetails"></p>
                 
                 <div class="score-calculation">
                     <h4>How your score is calculated:</h4>
@@ -699,15 +699,15 @@
                         <li>Questions 1-5: 1 (Strongly disagree) → 5 (Strongly agree)</li>
                         <li>Question 6 (reversed): 1 → 5 points, 2 → 4 points, etc.</li>
                     </ul>
-                    <div class="score-details" id="resilienceScoreDetails"></div>
+                    <div class="score-details" id="eqScoreDetails"></div>
                 </div>
                 
                 <div class="advice-container">
                     <h3>Personalized Advice</h3>
-                    <div id="resilienceAdvice"></div>
+                    <div id="eqAdvice"></div>
                 </div>
             </div>
-            <button class="btn restart-btn" id="resilienceRestartBtn">Retake Test</button>
+            <button class="btn restart-btn" id="eqRestartBtn">Retake Test</button>
         </div>
 
         <!-- Anxiety Results -->
@@ -744,9 +744,9 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Test navigation
-            const resilienceBtn = document.getElementById('resilienceBtn');
+            const eqBtn = document.getElementById('eqBtn');
             const anxietyBtn = document.getElementById('anxietyBtn');
-            const resilienceTest = document.getElementById('resilienceTest');
+            const eqTest = document.getElementById('eqTest');
             const anxietyTest = document.getElementById('anxietyTest');
 
             function switchTest(activeTest) {
@@ -756,14 +756,14 @@
                 });
                 
                 // Deactivate all test buttons
-                resilienceBtn.classList.remove('active');
+                eqBtn.classList.remove('active');
                 anxietyBtn.classList.remove('active');
                 
-                if (activeTest === 'resilience') {
-                    // Show resilience test
-                    resilienceTest.style.display = 'block';
-                    resilienceBtn.classList.add('active');
-                    initTest('resilience');
+                if (activeTest === 'eq') {
+                    // Show EQ test
+                    eqTest.style.display = 'block';
+                    eqBtn.classList.add('active');
+                    initTest('eq');
                 } else {
                     // Show anxiety test
                     anxietyTest.style.display = 'block';
@@ -772,7 +772,7 @@
                 }
             }
 
-            resilienceBtn.addEventListener('click', () => switchTest('resilience'));
+            eqBtn.addEventListener('click', () => switchTest('eq'));
             anxietyBtn.addEventListener('click', () => switchTest('anxiety'));
 
             // Initialize a test
@@ -845,7 +845,7 @@
                     let originalValue = questionValue;
                     
                     // Reversed questions (Q6 for both tests)
-                    if ((testType === 'resilience' && index === 5) || 
+                    if ((testType === 'eq' && index === 5) || 
                         (testType === 'anxiety' && index === 5)) {
                         questionValue = 6 - questionValue; // Reverse 1→5, 2→4, etc.
                         scoreDetails.push(`Q${index+1}: ${originalValue} → ${questionValue} pts (reversed)`);
@@ -879,41 +879,41 @@
                 document.getElementById(`${testType}ScoreDetails`).innerHTML = scoreDetails.join('<br>');
                 
                 // Interpret results
-                if (testType === 'resilience') {
+                if (testType === 'eq') {
                     if (score >= 25) {
-                        message.textContent = 'High Resilience';
-                        details.textContent = 'You demonstrate excellent ability to face challenges and bounce back from difficulties. This psychological strength serves you well in daily life.';
+                        message.textContent = 'High Emotional Intelligence';
+                        details.textContent = 'You demonstrate excellent emotional awareness and management skills. This ability serves you well in personal and professional relationships.';
                         adviceElement.innerHTML = `
-                            <p><strong>To maintain your excellent resilience:</strong></p>
+                            <p><strong>To maintain your high EQ:</strong></p>
                             <ul>
-                                <li>Continue practicing stress management techniques</li>
-                                <li>Share your coping strategies with others</li>
-                                <li>Take on new challenges to continue growing</li>
-                                <li>Practice gratitude daily</li>
+                                <li>Continue practicing self-reflection</li>
+                                <li>Help others develop their emotional skills</li>
+                                <li>Stay open to feedback about your emotional impact</li>
+                                <li>Explore advanced emotional intelligence concepts</li>
                             </ul>
                         `;
                     } else if (score >= 16) {
-                        message.textContent = 'Moderate Resilience';
-                        details.textContent = 'You generally handle stress well, but some situations may still unsettle you. Continue developing your coping strategies.';
+                        message.textContent = 'Moderate Emotional Intelligence';
+                        details.textContent = 'You have good emotional awareness but could improve in some areas. With practice, you can enhance your emotional skills.';
                         adviceElement.innerHTML = `
-                            <p><strong>To improve your resilience:</strong></p>
+                            <p><strong>To improve your EQ:</strong></p>
                             <ul>
-                                <li>Practice mindfulness for 10 minutes daily</li>
-                                <li>Identify negative thoughts and reframe them</li>
-                                <li>Develop a strong social support network</li>
-                                <li>Accept failure as a learning opportunity</li>
+                                <li>Practice naming your emotions daily</li>
+                                <li>Pause before reacting to strong emotions</li>
+                                <li>Observe how others express emotions</li>
+                                <li>Read about emotional intelligence</li>
                             </ul>
                         `;
                     } else {
-                        message.textContent = 'Low Resilience';
-                        details.textContent = 'You may struggle with stress and challenges. Consider relaxation techniques or speaking with a professional to strengthen your coping skills.';
+                        message.textContent = 'Developing Emotional Intelligence';
+                        details.textContent = 'You may struggle with emotional awareness and management. These skills can be learned with practice and patience.';
                         adviceElement.innerHTML = `
-                            <p><strong>To build your resilience:</strong></p>
+                            <p><strong>To develop your EQ:</strong></p>
                             <ul>
-                                <li>Start with small, manageable challenges</li>
-                                <li>Practice deep breathing exercises</li>
-                                <li>Identify your stress triggers</li>
-                                <li>Seek professional help if needed</li>
+                                <li>Start a feelings journal</li>
+                                <li>Learn basic emotion vocabulary</li>
+                                <li>Practice deep breathing when emotional</li>
+                                <li>Consider EQ training or counseling</li>
                             </ul>
                         `;
                     }
@@ -959,8 +959,8 @@
             }
 
             // Restart buttons
-            document.getElementById('resilienceRestartBtn').addEventListener('click', function() {
-                resetTest('resilience');
+            document.getElementById('eqRestartBtn').addEventListener('click', function() {
+                resetTest('eq');
             });
             
             document.getElementById('anxietyRestartBtn').addEventListener('click', function() {
@@ -983,8 +983,8 @@
                 initTest(testType);
             }
 
-            // Initialize resilience test on load
-            switchTest('resilience');
+            // Initialize EQ test on load
+            switchTest('eq');
         });
     </script>
 </body>
