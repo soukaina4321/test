@@ -206,18 +206,26 @@
             text-align: center;
         }
 
-        .result-score {
-            font-size: 3rem;
+        /* Style pour les niveaux de résultat */
+        .result-level {
+            font-size: 2rem;
             font-weight: 700;
             margin: 20px 0;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
         }
 
-        .eq-score {
+        .eq-level {
+            background-color: rgba(94, 53, 177, 0.1);
             color: var(--primary);
+            border: 2px solid var(--primary);
         }
 
-        .anxiety-score {
+        .anxiety-level {
+            background-color: rgba(239, 83, 80, 0.1);
             color: var(--danger);
+            border: 2px solid var(--danger);
         }
 
         .result-message {
@@ -288,6 +296,79 @@
             padding: 20px;
         }
 
+        /* Admin styles */
+        .admin-panel {
+            display: none;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        .admin-btn {
+            background: var(--danger);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+
+        .admin-login {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            z-index: 1001;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .admin-login input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .admin-results {
+            margin-top: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .test-result {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        /* Email field */
+        .email-field {
+            padding: 20px;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .email-field label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .email-field input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
         @media (max-width: 600px) {
             .test-selector {
                 flex-direction: column;
@@ -317,9 +398,38 @@
             <p>Assess your emotional intelligence and anxiety levels</p>
         </header>
 
+        <!-- Admin Panel Button (hidden by default) -->
+        <div class="admin-panel">
+            <button class="admin-btn" id="adminBtn">Admin</button>
+        </div>
+
+        <!-- Admin Login -->
+        <div class="admin-login" id="adminLogin">
+            <h2>Admin Login</h2>
+            <input type="password" id="adminPassword" placeholder="Enter admin password">
+            <button class="btn" id="loginBtn">Login</button>
+            <div id="loginError" style="color: var(--danger); margin-top: 10px;"></div>
+        </div>
+
+        <!-- Admin Results -->
+        <div class="admin-login" id="adminResults" style="display: none;">
+            <h2>Test Results</h2>
+            <button class="btn" id="logoutBtn" style="margin-bottom: 20px;">Logout</button>
+            <div class="admin-results" id="resultsList">
+                <!-- Results will be displayed here -->
+            </div>
+            <button class="btn" id="exportBtn" style="margin-top: 20px;">Export as CSV</button>
+        </div>
+
         <div class="test-selector">
             <button class="test-btn active" id="eqBtn">EQ Test</button>
             <button class="test-btn" id="anxietyBtn">Anxiety Test</button>
+        </div>
+
+        <!-- Email Field -->
+        <div class="email-field" id="emailContainer">
+            <label for="userEmail">Your email (optional):</label>
+            <input type="email" id="userEmail" placeholder="email@example.com">
         </div>
 
         <!-- Emotional Intelligence Test (6 questions) -->
@@ -686,21 +796,11 @@
 
         <!-- EQ Results -->
         <div class="result-container" id="eqResult">
-            <h2>Your Emotional Intelligence Score</h2>
-            <div class="result-score eq-score" id="eqFinalScore"></div>
+            <h2>Your Emotional Intelligence Result</h2>
+            <div class="result-level eq-level" id="eqFinalLevel"></div>
             <div class="result-message" id="eqMessage"></div>
             <div class="result-details">
                 <p id="eqDetails"></p>
-                
-                <div class="score-calculation">
-                    <h4>How your score is calculated:</h4>
-                    <p>6 questions, total score between 6 and 30 points:</p>
-                    <ul>
-                        <li>Questions 1-5: 1 (Strongly disagree) → 5 (Strongly agree)</li>
-                        <li>Question 6 (reversed): 1 → 5 points, 2 → 4 points, etc.</li>
-                    </ul>
-                    <div class="score-details" id="eqScoreDetails"></div>
-                </div>
                 
                 <div class="advice-container">
                     <h3>Personalized Advice</h3>
@@ -712,21 +812,11 @@
 
         <!-- Anxiety Results -->
         <div class="result-container" id="anxietyResult">
-            <h2>Your Anxiety Score</h2>
-            <div class="result-score anxiety-score" id="anxietyFinalScore"></div>
+            <h2>Your Anxiety Level</h2>
+            <div class="result-level anxiety-level" id="anxietyFinalLevel"></div>
             <div class="result-message" id="anxietyMessage"></div>
             <div class="result-details">
                 <p id="anxietyDetails"></p>
-                
-                <div class="score-calculation">
-                    <h4>How your score is calculated:</h4>
-                    <p>6 questions, total score between 6 and 30 points:</p>
-                    <ul>
-                        <li>Questions 1-5: 1 (Never) → 5 (Always)</li>
-                        <li>Question 6 (reversed): 1 → 5 points, 2 → 4 points, etc.</li>
-                    </ul>
-                    <div class="score-details" id="anxietyScoreDetails"></div>
-                </div>
                 
                 <div class="advice-container">
                     <h3>Personalized Advice</h3>
@@ -743,6 +833,96 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Admin functionality
+            const adminBtn = document.getElementById('adminBtn');
+            const adminLogin = document.getElementById('adminLogin');
+            const adminResults = document.getElementById('adminResults');
+            const loginBtn = document.getElementById('loginBtn');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const exportBtn = document.getElementById('exportBtn');
+            const adminPassword = document.getElementById('adminPassword');
+            const loginError = document.getElementById('loginError');
+            
+            // Simple password (change this to something more secure)
+            const ADMIN_PASSWORD = "admin123";
+            
+            // Show admin button (normally you'd hide this in production)
+            document.querySelector('.admin-panel').style.display = 'block';
+            
+            adminBtn.addEventListener('click', function() {
+                adminLogin.style.display = 'block';
+            });
+            
+            loginBtn.addEventListener('click', function() {
+                if (adminPassword.value === ADMIN_PASSWORD) {
+                    adminLogin.style.display = 'none';
+                    adminResults.style.display = 'block';
+                    loadResults();
+                } else {
+                    loginError.textContent = "Incorrect password";
+                }
+            });
+            
+            logoutBtn.addEventListener('click', function() {
+                adminResults.style.display = 'none';
+                adminPassword.value = '';
+                loginError.textContent = '';
+            });
+            
+            exportBtn.addEventListener('click', function() {
+                exportToCSV();
+            });
+            
+            function loadResults() {
+                const resultsList = document.getElementById('resultsList');
+                const results = JSON.parse(localStorage.getItem('testResults')) || [];
+                
+                if (results.length === 0) {
+                    resultsList.innerHTML = '<p>No test results yet.</p>';
+                    return;
+                }
+                
+                resultsList.innerHTML = '';
+                
+                results.forEach((result, index) => {
+                    const resultDiv = document.createElement('div');
+                    resultDiv.className = 'test-result';
+                    resultDiv.innerHTML = `
+                        <p><strong>Test:</strong> ${result.testType.toUpperCase()}</p>
+                        <p><strong>Email:</strong> ${result.email || 'Anonymous'}</p>
+                        <p><strong>Result:</strong> ${result.level}</p>
+                        <p><strong>Score:</strong> ${result.score} (for admin)</p>
+                        <p><strong>Date:</strong> ${result.date}</p>
+                        ${index < results.length - 1 ? '<hr>' : ''}
+                    `;
+                    resultsList.appendChild(resultDiv);
+                });
+            }
+            
+            function exportToCSV() {
+                const results = JSON.parse(localStorage.getItem('testResults')) || [];
+                if (results.length === 0) {
+                    alert('No results to export');
+                    return;
+                }
+                
+                let csv = 'Test Type,Email,Result,Score,Date\n';
+                
+                results.forEach(result => {
+                    csv += `${result.testType},${result.email || 'Anonymous'},"${result.level}",${result.score},${result.date}\n`;
+                });
+                
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.setAttribute('hidden', '');
+                a.setAttribute('href', url);
+                a.setAttribute('download', 'psychological_test_results.csv');
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+            
             // Test navigation
             const eqBtn = document.getElementById('eqBtn');
             const anxietyBtn = document.getElementById('anxietyBtn');
@@ -833,10 +1013,10 @@
                 });
             }
 
-            // Calculate score
+            // Calculate score and determine level
             function calculateScore(testType) {
-                const form = document.getElementById(`${testType}Form`);
-                const inputs = form.querySelectorAll('input[type="radio"]:checked');
+                const email = document.getElementById('userEmail').value || 'Anonymous';
+                const inputs = document.querySelectorAll(`#${testType}Form input[type="radio"]:checked`);
                 let score = 0;
                 let scoreDetails = [];
                 
@@ -856,106 +1036,124 @@
                     score += questionValue;
                 });
 
-                showResults(testType, score, scoreDetails);
+                // Determine the level based on score
+                let level, message, details, advice;
+                
+                if (testType === 'eq') {
+                    if (score >= 25) {
+                        level = "High EQ";
+                        message = "Excellent Emotional Intelligence";
+                        details = "You demonstrate advanced emotional awareness and management skills that benefit both personal and professional relationships.";
+                        advice = `
+                            <ul>
+                                <li>Continue practicing mindfulness and self-reflection</li>
+                                <li>Mentor others in emotional intelligence</li>
+                                <li>Explore leadership opportunities</li>
+                                <li>Consider advanced EQ training</li>
+                            </ul>
+                        `;
+                    } else if (score >= 16) {
+                        level = "Moderate EQ";
+                        message = "Good Emotional Intelligence";
+                        details = "You have solid emotional skills with room for growth in certain areas that can be improved with practice.";
+                        advice = `
+                            <ul>
+                                <li>Practice identifying emotions in different situations</li>
+                                <li>Work on pausing before reacting emotionally</li>
+                                <li>Read books on emotional intelligence</li>
+                                <li>Seek feedback on your emotional responses</li>
+                            </ul>
+                        `;
+                    } else {
+                        level = "Developing EQ";
+                        message = "Basic Emotional Intelligence";
+                        details = "You're developing emotional awareness skills that can be strengthened with focused practice and learning.";
+                        advice = `
+                            <ul>
+                                <li>Start an emotions journal</li>
+                                <li>Learn basic emotion vocabulary</li>
+                                <li>Practice deep breathing exercises</li>
+                                <li>Consider EQ workshops or counseling</li>
+                            </ul>
+                        `;
+                    }
+                } else { // Anxiety test
+                    if (score >= 20) {
+                        level = "High Anxiety";
+                        message = "Significant Anxiety Level";
+                        details = "Your responses indicate a high level of anxiety that may benefit from professional support.";
+                        advice = `
+                            <ul>
+                                <li>Consult with a mental health professional</li>
+                                <li>Practice daily relaxation techniques</li>
+                                <li>Establish a consistent sleep routine</li>
+                                <li>Limit caffeine and alcohol intake</li>
+                            </ul>
+                        `;
+                    } else if (score >= 10) {
+                        level = "Moderate Anxiety";
+                        message = "Some Anxiety Present";
+                        details = "You experience moderate anxiety that could be managed with self-care and stress reduction techniques.";
+                        advice = `
+                            <ul>
+                                <li>Practice regular physical exercise</li>
+                                <li>Try mindfulness meditation</li>
+                                <li>Keep a worry journal</li>
+                                <li>Learn time management techniques</li>
+                            </ul>
+                        `;
+                    } else {
+                        level = "Low Anxiety";
+                        message = "Minimal Anxiety";
+                        details = "Your responses indicate generally low anxiety levels and good stress management skills.";
+                        advice = `
+                            <ul>
+                                <li>Maintain your healthy routines</li>
+                                <li>Continue stress prevention practices</li>
+                                <li>Be aware of early stress signs</li>
+                                <li>Help others manage their anxiety</li>
+                            </ul>
+                        `;
+                    }
+                }
+
+                // Store the result
+                const testResult = {
+                    email: email,
+                    score: score,
+                    level: level,
+                    date: new Date().toLocaleString(),
+                    testType: testType
+                };
+                
+                let allResults = JSON.parse(localStorage.getItem('testResults')) || [];
+                allResults.push(testResult);
+                localStorage.setItem('testResults', JSON.stringify(allResults));
+                
+                showResults(testType, level, message, details, advice, scoreDetails);
             }
 
             // Show results
-            function showResults(testType, score, scoreDetails) {
+            function showResults(testType, level, message, details, advice, scoreDetails) {
                 const testContainer = document.getElementById(`${testType}Test`);
                 const resultContainer = document.getElementById(`${testType}Result`);
-                const finalScore = document.getElementById(`${testType}FinalScore`);
-                const message = document.getElementById(`${testType}Message`);
-                const details = document.getElementById(`${testType}Details`);
+                const finalLevel = document.getElementById(`${testType}FinalLevel`);
+                const messageElement = document.getElementById(`${testType}Message`);
+                const detailsElement = document.getElementById(`${testType}Details`);
                 const adviceElement = document.getElementById(`${testType}Advice`);
                 
                 // Hide test and show results
                 testContainer.style.display = 'none';
                 resultContainer.style.display = 'block';
                 
-                // Display score
-                finalScore.textContent = score;
+                // Display results
+                finalLevel.textContent = level;
+                messageElement.textContent = message;
+                detailsElement.textContent = details;
+                adviceElement.innerHTML = advice;
                 
-                // Display calculation details
+                // Display calculation details (hidden from user but stored)
                 document.getElementById(`${testType}ScoreDetails`).innerHTML = scoreDetails.join('<br>');
-                
-                // Interpret results
-                if (testType === 'eq') {
-                    if (score >= 25) {
-                        message.textContent = 'High Emotional Intelligence';
-                        details.textContent = 'You demonstrate excellent emotional awareness and management skills. This ability serves you well in personal and professional relationships.';
-                        adviceElement.innerHTML = `
-                            <p><strong>To maintain your high EQ:</strong></p>
-                            <ul>
-                                <li>Continue practicing self-reflection</li>
-                                <li>Help others develop their emotional skills</li>
-                                <li>Stay open to feedback about your emotional impact</li>
-                                <li>Explore advanced emotional intelligence concepts</li>
-                            </ul>
-                        `;
-                    } else if (score >= 16) {
-                        message.textContent = 'Moderate Emotional Intelligence';
-                        details.textContent = 'You have good emotional awareness but could improve in some areas. With practice, you can enhance your emotional skills.';
-                        adviceElement.innerHTML = `
-                            <p><strong>To improve your EQ:</strong></p>
-                            <ul>
-                                <li>Practice naming your emotions daily</li>
-                                <li>Pause before reacting to strong emotions</li>
-                                <li>Observe how others express emotions</li>
-                                <li>Read about emotional intelligence</li>
-                            </ul>
-                        `;
-                    } else {
-                        message.textContent = 'Developing Emotional Intelligence';
-                        details.textContent = 'You may struggle with emotional awareness and management. These skills can be learned with practice and patience.';
-                        adviceElement.innerHTML = `
-                            <p><strong>To develop your EQ:</strong></p>
-                            <ul>
-                                <li>Start a feelings journal</li>
-                                <li>Learn basic emotion vocabulary</li>
-                                <li>Practice deep breathing when emotional</li>
-                                <li>Consider EQ training or counseling</li>
-                            </ul>
-                        `;
-                    }
-                } else { // Anxiety test
-                    if (score >= 20) {
-                        message.textContent = 'High Anxiety';
-                        details.textContent = 'Your anxiety level seems high. If this affects your daily life, it would be beneficial to speak with a healthcare professional.';
-                        adviceElement.innerHTML = `
-                            <p><strong>To manage your anxiety:</strong></p>
-                            <ul>
-                                <li>Consult a mental health professional</li>
-                                <li>Practice breathing exercises daily</li>
-                                <li>Limit caffeine and ensure adequate sleep</li>
-                                <li>Try the 5-4-3-2-1 grounding technique</li>
-                            </ul>
-                        `;
-                    } else if (score >= 10) {
-                        message.textContent = 'Moderate Anxiety';
-                        details.textContent = 'You experience some anxiety, but it seems manageable. Relaxation techniques could help you better manage your stress.';
-                        adviceElement.innerHTML = `
-                            <p><strong>To reduce your anxiety:</strong></p>
-                            <ul>
-                                <li>Try yoga or meditation</li>
-                                <li>Keep a worry journal</li>
-                                <li>Engage in regular physical activity</li>
-                                <li>Practice square breathing technique</li>
-                            </ul>
-                        `;
-                    } else {
-                        message.textContent = 'Low Anxiety';
-                        details.textContent = 'Your anxiety level is low. You seem to handle daily stress well.';
-                        adviceElement.innerHTML = `
-                            <p><strong>To maintain your well-being:</strong></p>
-                            <ul>
-                                <li>Continue your good stress management habits</li>
-                                <li>Be mindful of early stress signs</li>
-                                <li>Maintain work-life balance</li>
-                                <li>Practice preventive relaxation techniques</li>
-                            </ul>
-                        `;
-                    }
-                }
             }
 
             // Restart buttons
