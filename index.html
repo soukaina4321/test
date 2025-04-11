@@ -206,7 +206,6 @@
             text-align: center;
         }
 
-        /* Style pour les niveaux de résultat */
         .result-level {
             font-size: 2rem;
             font-weight: 700;
@@ -296,7 +295,6 @@
             padding: 20px;
         }
 
-        /* Admin styles */
         .admin-panel {
             display: none;
             position: fixed;
@@ -348,7 +346,6 @@
             border-bottom: 1px solid #eee;
         }
 
-        /* Email field */
         .email-field {
             padding: 20px;
             background: var(--light);
@@ -367,6 +364,27 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+        }
+
+        /* Nouveaux styles ajoutés */
+        .sync-notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            display: none;
+            z-index: 1002;
+        }
+
+        .sync-controls {
+            margin-top: 20px;
+            padding: 15px;
+            background: var(--light);
+            border-radius: var(--border-radius);
         }
 
         @media (max-width: 600px) {
@@ -392,13 +410,18 @@
     </style>
 </head>
 <body>
+    <!-- Notification de synchronisation -->
+    <div class="sync-notification" id="syncNotification">
+        New test results synchronized!
+    </div>
+
     <div class="container">
         <header>
             <h1>Psychological Tests</h1>
             <p>Assess your emotional intelligence and anxiety levels</p>
         </header>
 
-        <!-- Admin Panel Button (hidden by default) -->
+        <!-- Admin Panel Button -->
         <div class="admin-panel">
             <button class="admin-btn" id="adminBtn">Admin</button>
         </div>
@@ -419,6 +442,16 @@
                 <!-- Results will be displayed here -->
             </div>
             <button class="btn" id="exportBtn" style="margin-top: 20px;">Export as CSV</button>
+            
+            <!-- Nouveau: Contrôles de synchronisation -->
+            <div class="sync-controls">
+                <button class="btn" id="manualSyncBtn">Sync Now</button>
+                <div style="margin-top: 10px;">
+                    <label>
+                        <input type="checkbox" id="autoSyncCheckbox" checked> Auto-sync every 5 seconds
+                    </label>
+                </div>
+            </div>
         </div>
 
         <div class="test-selector">
@@ -842,6 +875,9 @@
             const exportBtn = document.getElementById('exportBtn');
             const adminPassword = document.getElementById('adminPassword');
             const loginError = document.getElementById('loginError');
+            const manualSyncBtn = document.getElementById('manualSyncBtn');
+            const autoSyncCheckbox = document.getElementById('autoSyncCheckbox');
+            const syncNotification = document.getElementById('syncNotification');
             
             // Simple password (change this to something more secure)
             const ADMIN_PASSWORD = "admin123";
@@ -873,16 +909,82 @@
                 exportToCSV();
             });
             
+            manualSyncBtn.addEventListener('click', function() {
+                syncResultsWithAdmin();
+            });
+
+            // Fonction pour synchroniser les résultats entre les appareils admin
+            function syncResultsWithAdmin() {
+                // Vérifier si l'admin est connecté
+                if (adminResults.style.display === 'block') {
+                    // Récupérer les résultats depuis le localStorage
+                    const results = JSON.parse(localStorage.getItem('testResults')) || [];
+                    
+                    // Envoyer les résultats à un serveur (simulé ici avec localStorage)
+                    localStorage.setItem('syncedTestResults', JSON.stringify(results));
+                    
+                    // Afficher la notification
+                    syncNotification.style.display = 'block';
+                    setTimeout(() => {
+                        syncNotification.style.display = 'none';
+                    }, 3000);
+                    
+                    // Recharger les résultats
+                    loadResults();
+                }
+            }
+
+            // Écouter les changements de stockage pour la synchronisation
+            window.addEventListener('storage', function(event) {
+                if (event.key === 'syncedTestResults' && adminResults.style.display === 'block') {
+                    loadResults();
+                    
+                    // Afficher la notification
+                    syncNotification.style.display = 'block';
+                    setTimeout(() => {
+                        syncNotification.style.display = 'none';
+                    }, 3000);
+                }
+            });
+
+            // Auto-sync
+            let autoSyncInterval;
+            function startAutoSync() {
+                autoSyncInterval = setInterval(syncResultsWithAdmin, 5000);
+            }
+            
+            function stopAutoSync() {
+                clearInterval(autoSyncInterval);
+            }
+            
+            autoSyncCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    startAutoSync();
+                } else {
+                    stopAutoSync();
+                }
+            });
+            
+            // Démarrer l'auto-sync si coché
+            if (autoSyncCheckbox.checked) {
+                startAutoSync();
+            }
+
             function loadResults() {
                 const resultsList = document.getElementById('resultsList');
-                const results = JSON.parse(localStorage.getItem('testResults')) || [];
-                
+                // Priorité aux données synchronisées, sinon utiliser le localStorage local
+                const results = JSON.parse(localStorage.getItem('syncedTestResults')) || 
+                               JSON.parse(localStorage.getItem('testResults')) || [];
+                        
                 if (results.length === 0) {
                     resultsList.innerHTML = '<p>No test results yet.</p>';
                     return;
                 }
                 
                 resultsList.innerHTML = '';
+                
+                // Trier par date (du plus récent au plus ancien)
+                results.sort((a, b) => new Date(b.date) - new Date(a.date));
                 
                 results.forEach((result, index) => {
                     const resultDiv = document.createElement('div');
@@ -891,7 +993,7 @@
                         <p><strong>Test:</strong> ${result.testType.toUpperCase()}</p>
                         <p><strong>Email:</strong> ${result.email || 'Anonymous'}</p>
                         <p><strong>Result:</strong> ${result.level}</p>
-                        <p><strong>Score:</strong> ${result.score} (for admin)</p>
+                        <p><strong>Score:</strong> ${result.score}</p>
                         <p><strong>Date:</strong> ${result.date}</p>
                         ${index < results.length - 1 ? '<hr>' : ''}
                     `;
@@ -900,7 +1002,8 @@
             }
             
             function exportToCSV() {
-                const results = JSON.parse(localStorage.getItem('testResults')) || [];
+                const results = JSON.parse(localStorage.getItem('syncedTestResults')) || 
+                                JSON.parse(localStorage.getItem('testResults')) || [];
                 if (results.length === 0) {
                     alert('No results to export');
                     return;
@@ -922,7 +1025,7 @@
                 a.click();
                 document.body.removeChild(a);
             }
-            
+
             // Test navigation
             const eqBtn = document.getElementById('eqBtn');
             const anxietyBtn = document.getElementById('anxietyBtn');
@@ -1129,6 +1232,9 @@
                 let allResults = JSON.parse(localStorage.getItem('testResults')) || [];
                 allResults.push(testResult);
                 localStorage.setItem('testResults', JSON.stringify(allResults));
+                
+                // Synchroniser avec les autres appareils admin
+                syncResultsWithAdmin();
                 
                 showResults(testType, level, message, details, advice, scoreDetails);
             }
