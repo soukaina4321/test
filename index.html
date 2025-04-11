@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psychological Tests |  sij EQ & Anxiety</title>
+    <title>Psychological  siyjTests | EQ & Anxiety</title>
     <style>
         :root {
             --primary: #5e35b1;
@@ -79,6 +79,14 @@
             background: var(--primary);
             color: white;
             transform: translateY(-2px);
+        }
+
+        .test-btn.disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background: #e9ecef;
+            border-color: #adb5bd;
+            color: #6c757d;
         }
 
         .test-container {
@@ -386,6 +394,14 @@
             border-radius: var(--border-radius);
         }
 
+        .already-taken-message {
+            text-align: center;
+            padding: 20px;
+            color: var(--danger);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
         @media (max-width: 600px) {
             .test-selector {
                 flex-direction: column;
@@ -451,6 +467,11 @@
                     </label>
                 </div>
             </div>
+        </div>
+
+        <!-- Message si test déjà passé -->
+        <div class="already-taken-message" id="alreadyTakenMessage" style="display: none;">
+            Vous avez déjà passé ce test. Une seule tentative est autorisée.
         </div>
 
         <div class="test-selector">
@@ -901,8 +922,25 @@
             const anxietyTest = document.getElementById('anxietyTest');
             const eqRestartBtn = document.getElementById('eqRestartBtn');
             const anxietyRestartBtn = document.getElementById('anxietyRestartBtn');
+            const alreadyTakenMessage = document.getElementById('alreadyTakenMessage');
+            const emailContainer = document.getElementById('emailContainer');
             
             const ADMIN_PASSWORD = "admin123";
+            
+            // Vérifier si l'utilisateur a déjà passé un test
+            function hasUserTakenTest() {
+                return localStorage.getItem('testTaken') === 'true';
+            }
+            
+            // Désactiver l'interface si test déjà passé
+            function disableTestInterface() {
+                document.querySelectorAll('.test-btn').forEach(btn => {
+                    btn.classList.add('disabled');
+                    btn.disabled = true;
+                });
+                emailContainer.style.display = 'none';
+                alreadyTakenMessage.style.display = 'block';
+            }
             
             // Afficher le panneau admin
             document.querySelector('.admin-panel').style.display = 'block';
@@ -936,8 +974,29 @@
                 syncResultsWithAdmin();
             });
 
+            // Vérifier l'unicité de l'email dans Firebase
+            async function isEmailUnique(email) {
+                if (!email || email === 'Anonymous') return true;
+                
+                try {
+                    const snapshot = await db.collection("testResults")
+                                          .where("email", "==", email)
+                                          .limit(1)
+                                          .get();
+                    return snapshot.empty;
+                } catch (error) {
+                    console.error("Error checking email:", error);
+                    return true; // En cas d'erreur, laisser passer
+                }
+            }
+
             // Initialiser les tests
             function initTest(testType) {
+                if (hasUserTakenTest()) {
+                    disableTestInterface();
+                    return;
+                }
+                
                 const form = document.getElementById(`${testType}Form`);
                 const questions = Array.from(form.querySelectorAll('.question'));
                 const nextBtn = document.getElementById(`${testType}NextBtn`);
@@ -980,8 +1039,17 @@
                 };
 
                 // Gestion de la soumission
-                form.onsubmit = function(e) {
+                form.onsubmit = async function(e) {
                     e.preventDefault();
+                    
+                    const email = document.getElementById('userEmail').value || 'Anonymous';
+                    
+                    // Vérifier l'unicité de l'email
+                    if (email !== 'Anonymous' && !(await isEmailUnique(email))) {
+                        alert('Cet email a déjà été utilisé pour passer le test. Une seule tentative est autorisée par email.');
+                        return;
+                    }
+                    
                     calculateScore(testType);
                 };
 
@@ -1102,6 +1170,11 @@
                 
                 try {
                     await db.collection("testResults").add(testResult);
+                    
+                    // Marquer comme test effectué
+                    localStorage.setItem('testTaken', 'true');
+                    disableTestInterface();
+                    
                     showResults(testType, level, message, details, advice, scoreDetails);
                 } catch (error) {
                     console.error("Error saving to Firestore:", error);
@@ -1109,6 +1182,8 @@
                     let allResults = JSON.parse(localStorage.getItem('testResults')) || [];
                     allResults.push(testResult);
                     localStorage.setItem('testResults', JSON.stringify(allResults));
+                    localStorage.setItem('testTaken', 'true');
+                    disableTestInterface();
                     showResults(testType, level, message, details, advice, scoreDetails);
                 }
             }
@@ -1231,8 +1306,13 @@
                 startAutoSync();
             }
 
-            // Réinitialiser les tests
+            // Réinitialiser les tests (admin seulement)
             function resetTest(testType) {
+                if (adminResults.style.display !== 'block') {
+                    alert('Seul un administrateur peut réinitialiser les tests.');
+                    return;
+                }
+                
                 const form = document.getElementById(`${testType}Form`);
                 const testContainer = document.getElementById(`${testType}Test`);
                 const resultContainer = document.getElementById(`${testType}Result`);
@@ -1275,6 +1355,11 @@
             // Écouteurs d'événements
             eqBtn.addEventListener('click', () => switchTest('eq'));
             anxietyBtn.addEventListener('click', () => switchTest('anxiety'));
+
+            // Vérifier au chargement si test déjà passé
+            if (hasUserTakenTest()) {
+                disableTestInterface();
+            }
 
             // Initialisation
             switchTest('eq');
