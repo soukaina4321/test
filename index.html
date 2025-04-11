@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psychological soa Tests | EQ & Anxiety</title>
+    <title>Psychological Tests | EQ & Anxiety</title>
     <style>
         :root {
             --primary: #5e35b1;
@@ -17,6 +17,7 @@
             --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
+
         * {
             margin: 0;
             padding: 0;
@@ -30,6 +31,7 @@
             line-height: 1.6;
             padding: 20px;
         }
+
         .container {
             max-width: 800px;
             margin: 40px auto;
@@ -45,6 +47,7 @@
             padding: 30px;
             text-align: center;
         }
+
         h1 {
             font-size: 2.2rem;
             margin-bottom: 10px;
@@ -57,6 +60,7 @@
             margin: 20px 0;
             padding: 0 20px;
         }
+
         .test-btn {
             background: white;
             color: var(--primary);
@@ -70,6 +74,7 @@
             text-align: center;
             max-width: 200px;
         }
+
         .test-btn:hover, .test-btn.active {
             background: var(--primary);
             color: white;
@@ -85,6 +90,7 @@
             display: block;
             animation: fadeIn 0.5s;
         }
+
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -101,6 +107,7 @@
             overflow: hidden;
             margin-bottom: 10px;
         }
+
         .progress {
             height: 100%;
             background: linear-gradient(90deg, var(--accent), var(--success));
@@ -115,6 +122,7 @@
             background-color: var(--light);
             display: none;
         }
+
         .question.active {
             display: block;
             animation: slideIn 0.4s;
@@ -130,6 +138,7 @@
             margin-bottom: 15px;
             font-size: 1.1rem;
         }
+
         .rating-scale {
             display: flex;
             justify-content: space-between;
@@ -142,6 +151,7 @@
             display: flex;
             justify-content: space-between;
         }
+
         .radio-option {
             display: flex;
             flex-direction: column;
@@ -159,10 +169,12 @@
             cursor: pointer;
             transition: var(--transition);
         }
+
         input[type="radio"]:checked {
             border-color: var(--primary);
             background-color: var(--primary);
         }
+
         .btn {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -177,6 +189,7 @@
             width: 100%;
             margin-top: 20px;
         }
+
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(94, 53, 177, 0.3);
@@ -192,6 +205,7 @@
             padding: 30px;
             text-align: center;
         }
+
         .result-level {
             font-size: 2rem;
             font-weight: 700;
@@ -206,6 +220,7 @@
             color: var(--primary);
             border: 2px solid var(--primary);
         }
+
         .anxiety-level {
             background-color: rgba(239, 83, 80, 0.1);
             color: var(--danger);
@@ -224,6 +239,7 @@
             margin-top: 20px;
             text-align: left;
         }
+
         .score-calculation {
             margin-top: 20px;
             padding: 15px;
@@ -241,6 +257,7 @@
             margin-top: 10px;
             font-family: monospace;
         }
+
         .advice-container {
             background-color: #f8f9fa;
             border-left: 4px solid var(--accent);
@@ -258,6 +275,7 @@
             padding-left: 20px;
             margin-top: 10px;
         }
+
         .advice-container li {
             margin-bottom: 8px;
         }
@@ -276,6 +294,7 @@
             font-size: 0.9rem;
             padding: 20px;
         }
+
         .admin-panel {
             display: none;
             position: fixed;
@@ -292,6 +311,7 @@
             border-radius: 50px;
             cursor: pointer;
         }
+
         .admin-login {
             display: none;
             position: fixed;
@@ -306,6 +326,7 @@
             width: 90%;
             max-width: 400px;
         }
+
         .admin-login input {
             width: 100%;
             padding: 10px;
@@ -319,6 +340,7 @@
             max-height: 400px;
             overflow-y: auto;
         }
+
         .test-result {
             padding: 10px;
             border-bottom: 1px solid #eee;
@@ -336,12 +358,14 @@
             margin-bottom: 8px;
             font-weight: 600;
         }
+
         .email-field input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+
         .sync-notification {
             position: fixed;
             bottom: 20px;
@@ -354,6 +378,7 @@
             display: none;
             z-index: 1002;
         }
+
         .sync-controls {
             margin-top: 20px;
             padding: 15px;
@@ -371,6 +396,7 @@
                 width: 100%;
                 max-width: none;
             }
+            
             .radio-options {
                 flex-wrap: wrap;
             }
@@ -416,7 +442,7 @@
             </div>
             <button class="btn" id="exportBtn" style="margin-top: 20px;">Export as CSV</button>
             
-            <!-- Nouveau: Contrôles de synchronisation -->
+            <!-- Contrôles de synchronisation -->
             <div class="sync-controls">
                 <button class="btn" id="manualSyncBtn">Sync Now</button>
                 <div style="margin-top: 10px;">
@@ -426,6 +452,7 @@
                 </div>
             </div>
         </div>
+
         <div class="test-selector">
             <button class="test-btn active" id="eqBtn">EQ Test</button>
             <button class="test-btn" id="anxietyBtn">Anxiety Test</button>
@@ -436,14 +463,16 @@
             <label for="userEmail">Your email (optional):</label>
             <input type="email" id="userEmail" placeholder="email@example.com">
         </div>
-         <!-- Emotional Intelligence Test (6 questions) -->
-         <div class="test-container active" id="eqTest">
+
+        <!-- Emotional Intelligence Test (6 questions) -->
+        <div class="test-container active" id="eqTest">
             <div class="progress-container">
                 <div class="progress-bar">
                     <div class="progress" id="eqProgress"></div>
                 </div>
                 <div id="eqProgressText">Question 1 of 6</div>
             </div>
+
             <form id="eqForm">
                 <!-- Question 1 -->
                 <div class="question active" id="eqQ1">
@@ -502,8 +531,9 @@
                         </label>
                     </div>
                 </div>
-                 <!-- Question 3 -->
-                 <div class="question" id="eqQ3">
+
+                <!-- Question 3 -->
+                <div class="question" id="eqQ3">
                     <div class="question-text">3. I can recognize emotions in other people.</div>
                     <div class="radio-options">
                         <label class="radio-option">
@@ -528,8 +558,9 @@
                         </label>
                     </div>
                 </div>
-                 <!-- Question 4 -->
-                 <div class="question" id="eqQ4">
+
+                <!-- Question 4 -->
+                <div class="question" id="eqQ4">
                     <div class="question-text">4. I manage my emotions appropriately in difficult situations.</div>
                     <div class="radio-options">
                         <label class="radio-option">
@@ -554,6 +585,7 @@
                         </label>
                     </div>
                 </div>
+
                 <!-- Question 5 -->
                 <div class="question" id="eqQ5">
                     <div class="question-text">5. I use emotional understanding to improve my relationships.</div>
@@ -580,6 +612,7 @@
                         </label>
                     </div>
                 </div>
+
                 <!-- Question 6 (reversed) -->
                 <div class="question" id="eqQ6">
                     <div class="question-text">6. I often feel overwhelmed by my emotions. (reversed)</div>
@@ -606,6 +639,7 @@
                         </label>
                     </div>
                 </div>
+
                 <button type="button" class="btn" id="eqNextBtn">Next Question</button>
                 <button type="submit" class="btn" id="eqSubmitBtn" style="display: none;">View Results</button>
             </form>
@@ -619,6 +653,7 @@
                 </div>
                 <div id="anxietyProgressText">Question 1 of 6</div>
             </div>
+
             <form id="anxietyForm">
                 <!-- Question 1 -->
                 <div class="question active" id="anxietyQ1">
@@ -677,6 +712,7 @@
                         </label>
                     </div>
                 </div>
+
                 <!-- Question 3 -->
                 <div class="question" id="anxietyQ3">
                     <div class="question-text">3. I have trouble relaxing.</div>
@@ -703,6 +739,7 @@
                         </label>
                     </div>
                 </div>
+
                 <!-- Question 4 -->
                 <div class="question" id="anxietyQ4">
                     <div class="question-text">4. I feel afraid without apparent reason.</div>
@@ -729,6 +766,7 @@
                         </label>
                     </div>
                 </div>
+
                 <!-- Question 5 -->
                 <div class="question" id="anxietyQ5">
                     <div class="question-text">5. I feel restless or on edge.</div>
@@ -755,6 +793,7 @@
                         </label>
                     </div>
                 </div>
+
                 <!-- Question 6 (reversed) -->
                 <div class="question" id="anxietyQ6">
                     <div class="question-text">6. I feel calm and peaceful. (reversed)</div>
@@ -781,10 +820,12 @@
                         </label>
                     </div>
                 </div>
+
                 <button type="button" class="btn" id="anxietyNextBtn">Next Question</button>
                 <button type="submit" class="btn" id="anxietySubmitBtn" style="display: none;">View Results</button>
             </form>
         </div>
+
         <!-- EQ Results -->
         <div class="result-container" id="eqResult">
             <h2>Your Emotional Intelligence Result</h2>
@@ -821,156 +862,28 @@
             <p>© 2025 Psychological Tests | These tests are for informational purposes only</p>
         </footer>
     </div>
-    <!-- Ajoutez ces scripts AVANT votre script principal -->
+
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-           // Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+            // Configuration Firebase
+            const firebaseConfig = {
+                apiKey: "AIzaSyAopnRGVW4PP8qtw3umyv8i0eItqhbj61Q",
+                authDomain: "psychologicaltests-8ed93.firebaseapp.com",
+                projectId: "psychologicaltests-8ed93",
+                storageBucket: "psychologicaltests-8ed93.firebasestorage.app",
+                messagingSenderId: "446430873510",
+                appId: "1:446430873510:web:29eda97177a2eb5f54f167"
+            };
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAopnRGVW4PP8qtw3umyv8i0eItqhbj61Q",
-  authDomain: "psychologicaltests-8ed93.firebaseapp.com",
-  projectId: "psychologicaltests-8ed93",
-  storageBucket: "psychologicaltests-8ed93.firebasestorage.app",
-  messagingSenderId: "446430873510",
-  appId: "1:446430873510:web:29eda97177a2eb5f54f167"
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
             // Initialiser Firebase
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
 
-            // [Conservez toutes vos variables existantes]
-            const adminBtn = document.getElementById('adminBtn');
-            // ... (toutes les autres variables)
-
-            // Modifiez la fonction calculateScore()
-            async function calculateScore(testType) {
-                const email = document.getElementById('userEmail').value || 'Anonymous';
-                const inputs = document.querySelectorAll(`#${testType}Form input[type="radio"]:checked`);
-                let score = 0;
-                
-                inputs.forEach((input, index) => {
-                    let questionValue = parseInt(input.value);
-                    if ((testType === 'eq' && index === 5) || (testType === 'anxiety' && index === 5)) {
-                        questionValue = 6 - questionValue;
-                    }
-                    score += questionValue;
-                });
-
-                // [Conservez la logique de niveau/message/advice existante]
-                let level, message, details, advice;
-                if (testType === 'eq') {
-                    // ... (votre logique existante)
-                } else {
-                    // ... (votre logique existante)
-                }
-
-                // Sauvegarder dans Firebase
-                const testResult = {
-                    email: email,
-                    score: score,
-                    level: level,
-                    date: new Date().toISOString(),
-                    testType: testType,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                };
-
-                try {
-                    await db.collection("testResults").add(testResult);
-                    showResults(testType, level, message, details, advice);
-                } catch (error) {
-                    console.error("Error saving result:", error);
-                    // Fallback au localStorage si Firebase échoue
-                    localStorage.setItem(`lastResult_${Date.now()}`, JSON.stringify(testResult));
-                    showResults(testType, level, message, details, advice);
-                }
-            }
-
-            // Nouvelle fonction loadResults()
-            async function loadResults() {
-                const resultsList = document.getElementById('resultsList');
-                resultsList.innerHTML = '<p>Loading results...</p>';
-
-                try {
-                    const snapshot = await db.collection("testResults")
-                                          .orderBy("timestamp", "desc")
-                                          .limit(100)
-                                          .get();
-                    
-                    if (snapshot.empty) {
-                        resultsList.innerHTML = '<p>No test results yet.</p>';
-                        return;
-                    }
-                    
-                    resultsList.innerHTML = '';
-                    snapshot.forEach(doc => {
-                        const result = doc.data();
-                        const resultDiv = document.createElement('div');
-                        resultDiv.className = 'test-result';
-                        resultDiv.innerHTML = `
-                            <p><strong>Test:</strong> ${result.testType.toUpperCase()}</p>
-                            <p><strong>Email:</strong> ${result.email || 'Anonymous'}</p>
-                            <p><strong>Result:</strong> ${result.level}</p>
-                            <p><strong>Score:</strong> ${result.score}</p>
-                            <p><strong>Date:</strong> ${new Date(result.date).toLocaleString()}</p>
-                            <hr>
-                        `;
-                        resultsList.appendChild(resultDiv);
-                    });
-                } catch (error) {
-                    console.error("Error loading results:", error);
-                    resultsList.innerHTML = '<p>Error loading results. Please try again.</p>';
-                }
-            }
-
-            // Modifiez exportToCSV()
-            async function exportToCSV() {
-                try {
-                    const snapshot = await db.collection("testResults").get();
-                    if (snapshot.empty) {
-                        alert('No results to export');
-                        return;
-                    }
-                    
-                    let csv = 'Test Type,Email,Result,Score,Date\n';
-                    snapshot.forEach(doc => {
-                        const result = doc.data();
-                        csv += `${result.testType},${result.email || 'Anonymous'},"${result.level}",${result.score},${result.date}\n`;
-                    });
-                    
-                    const blob = new Blob([csv], { type: 'text/csv' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a');
-                    a.setAttribute('hidden', '');
-                    a.setAttribute('href', url);
-                    a.setAttribute('download', 'psychological_test_results.csv');
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                } catch (error) {
-                    console.error("Export failed:", error);
-                    alert('Export failed. Please try again.');
-                }
-            }
-
-            // [Conservez toutes les autres fonctions existantes]
-            // ... (switchTest, initTest, showResults, resetTest, etc.)
-
-            // Initialisation
-            switchTest('eq');
-            document.querySelector('.admin-panel').style.display = 'block';
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            // Admin functionality
+            // Variables d'interface
             const adminBtn = document.getElementById('adminBtn');
             const adminLogin = document.getElementById('adminLogin');
             const adminResults = document.getElementById('adminResults');
@@ -982,13 +895,19 @@ const app = initializeApp(firebaseConfig);
             const manualSyncBtn = document.getElementById('manualSyncBtn');
             const autoSyncCheckbox = document.getElementById('autoSyncCheckbox');
             const syncNotification = document.getElementById('syncNotification');
+            const eqBtn = document.getElementById('eqBtn');
+            const anxietyBtn = document.getElementById('anxietyBtn');
+            const eqTest = document.getElementById('eqTest');
+            const anxietyTest = document.getElementById('anxietyTest');
+            const eqRestartBtn = document.getElementById('eqRestartBtn');
+            const anxietyRestartBtn = document.getElementById('anxietyRestartBtn');
             
-            // Simple password (change this to something more secure)
             const ADMIN_PASSWORD = "admin123";
             
-            // Show admin button (normally you'd hide this in production)
+            // Afficher le panneau admin
             document.querySelector('.admin-panel').style.display = 'block';
             
+            // Gestion de l'admin
             adminBtn.addEventListener('click', function() {
                 adminLogin.style.display = 'block';
             });
@@ -1017,152 +936,7 @@ const app = initializeApp(firebaseConfig);
                 syncResultsWithAdmin();
             });
 
-            // Fonction pour synchroniser les résultats entre les appareils admin
-            function syncResultsWithAdmin() {
-                // Vérifier si l'admin est connecté
-                if (adminResults.style.display === 'block') {
-                    // Récupérer les résultats depuis le localStorage
-                    const results = JSON.parse(localStorage.getItem('testResults')) || [];
-                    
-                    // Envoyer les résultats à un serveur (simulé ici avec localStorage)
-                    localStorage.setItem('syncedTestResults', JSON.stringify(results));
-                    
-                    // Afficher la notification
-                    syncNotification.style.display = 'block';
-                    setTimeout(() => {
-                        syncNotification.style.display = 'none';
-                    }, 3000);
-                    
-                    // Recharger les résultats
-                    loadResults();
-                }
-            }
-
-            // Écouter les changements de stockage pour la synchronisation
-            window.addEventListener('storage', function(event) {
-                if (event.key === 'syncedTestResults' && adminResults.style.display === 'block') {
-                    loadResults();
-                    
-                    // Afficher la notification
-                    syncNotification.style.display = 'block';
-                    setTimeout(() => {
-                        syncNotification.style.display = 'none';
-                    }, 3000);
-                }
-            });
-
-            // Auto-sync
-            let autoSyncInterval;
-            function startAutoSync() {
-                autoSyncInterval = setInterval(syncResultsWithAdmin, 5000);
-            }
-            
-            function stopAutoSync() {
-                clearInterval(autoSyncInterval);
-            }
-            
-            autoSyncCheckbox.addEventListener('change', function() {
-                if (this.checked) {
-                    startAutoSync();
-                } else {
-                    stopAutoSync();
-                }
-            });
-            
-            // Démarrer l'auto-sync si coché
-            if (autoSyncCheckbox.checked) {
-                startAutoSync();
-            }
-
-            function loadResults() {
-                const resultsList = document.getElementById('resultsList');
-                // Priorité aux données synchronisées, sinon utiliser le localStorage local
-                const results = JSON.parse(localStorage.getItem('syncedTestResults')) || 
-                               JSON.parse(localStorage.getItem('testResults')) || [];
-                        
-                if (results.length === 0) {
-                    resultsList.innerHTML = '<p>No test results yet.</p>';
-                    return;
-                }
-                
-                resultsList.innerHTML = '';
-                
-                // Trier par date (du plus récent au plus ancien)
-                results.sort((a, b) => new Date(b.date) - new Date(a.date));
-                
-                results.forEach((result, index) => {
-                    const resultDiv = document.createElement('div');
-                    resultDiv.className = 'test-result';
-                    resultDiv.innerHTML = `
-                        <p><strong>Test:</strong> ${result.testType.toUpperCase()}</p>
-                        <p><strong>Email:</strong> ${result.email || 'Anonymous'}</p>
-                        <p><strong>Result:</strong> ${result.level}</p>
-                        <p><strong>Score:</strong> ${result.score}</p>
-                        <p><strong>Date:</strong> ${result.date}</p>
-                        ${index < results.length - 1 ? '<hr>' : ''}
-                    `;
-                    resultsList.appendChild(resultDiv);
-                });
-            }
-            
-            function exportToCSV() {
-                const results = JSON.parse(localStorage.getItem('syncedTestResults')) || 
-                                JSON.parse(localStorage.getItem('testResults')) || [];
-                if (results.length === 0) {
-                    alert('No results to export');
-                    return;
-                }
-                
-                let csv = 'Test Type,Email,Result,Score,Date\n';
-                
-                results.forEach(result => {
-                    csv += `${result.testType},${result.email || 'Anonymous'},"${result.level}",${result.score},${result.date}\n`;
-                });
-                
-                const blob = new Blob([csv], { type: 'text/csv' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a');
-                a.setAttribute('hidden', '');
-                a.setAttribute('href', url);
-                a.setAttribute('download', 'psychological_test_results.csv');
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-            }
-
-            // Test navigation
-            const eqBtn = document.getElementById('eqBtn');
-            const anxietyBtn = document.getElementById('anxietyBtn');
-            const eqTest = document.getElementById('eqTest');
-            const anxietyTest = document.getElementById('anxietyTest');
-
-            function switchTest(activeTest) {
-                // Hide all tests and results
-                document.querySelectorAll('.test-container, .result-container').forEach(el => {
-                    el.style.display = 'none';
-                });
-                
-                // Deactivate all test buttons
-                eqBtn.classList.remove('active');
-                anxietyBtn.classList.remove('active');
-                
-                if (activeTest === 'eq') {
-                    // Show EQ test
-                    eqTest.style.display = 'block';
-                    eqBtn.classList.add('active');
-                    initTest('eq');
-                } else {
-                    // Show anxiety test
-                    anxietyTest.style.display = 'block';
-                    anxietyBtn.classList.add('active');
-                    initTest('anxiety');
-                }
-            }
-
-            eqBtn.addEventListener('click', () => switchTest('eq'));
-            anxietyBtn.addEventListener('click', () => switchTest('anxiety'));
-
-            // Initialize a test
+            // Initialiser les tests
             function initTest(testType) {
                 const form = document.getElementById(`${testType}Form`);
                 const questions = Array.from(form.querySelectorAll('.question'));
@@ -1173,23 +947,15 @@ const app = initializeApp(firebaseConfig);
                 
                 let currentQuestionIndex = 0;
 
-                // Show first question
-                showQuestion(currentQuestionIndex);
-
                 function showQuestion(index) {
-                    // Hide all questions
                     questions.forEach(q => q.style.display = 'none');
-                    
-                    // Show current question
                     questions[index].style.display = 'block';
                     questions[index].classList.add('active');
                     
-                    // Update progress
                     const progressPercent = ((index + 1) / questions.length) * 100;
                     progressBar.style.width = `${progressPercent}%`;
                     progressText.textContent = `Question ${index + 1} of ${questions.length}`;
                     
-                    // Handle button display
                     if (index === questions.length - 1) {
                         nextBtn.style.display = 'none';
                         submitBtn.style.display = 'block';
@@ -1199,8 +965,8 @@ const app = initializeApp(firebaseConfig);
                     }
                 }
 
-                // Next question button
-                nextBtn.addEventListener('click', function() {
+                // Gestion du bouton Next
+                nextBtn.onclick = function() {
                     const currentQuestion = questions[currentQuestionIndex];
                     const selectedOption = currentQuestion.querySelector('input[type="radio"]:checked');
                     
@@ -1211,17 +977,20 @@ const app = initializeApp(firebaseConfig);
                     
                     currentQuestionIndex++;
                     showQuestion(currentQuestionIndex);
-                });
+                };
 
-                // Form submission
-                form.addEventListener('submit', function(e) {
+                // Gestion de la soumission
+                form.onsubmit = function(e) {
                     e.preventDefault();
                     calculateScore(testType);
-                });
+                };
+
+                // Afficher la première question
+                showQuestion(currentQuestionIndex);
             }
 
-            // Calculate score and determine level
-            function calculateScore(testType) {
+            // Calcul du score
+            async function calculateScore(testType) {
                 const email = document.getElementById('userEmail').value || 'Anonymous';
                 const inputs = document.querySelectorAll(`#${testType}Form input[type="radio"]:checked`);
                 let score = 0;
@@ -1231,10 +1000,8 @@ const app = initializeApp(firebaseConfig);
                     let questionValue = parseInt(input.value);
                     let originalValue = questionValue;
                     
-                    // Reversed questions (Q6 for both tests)
-                    if ((testType === 'eq' && index === 5) || 
-                        (testType === 'anxiety' && index === 5)) {
-                        questionValue = 6 - questionValue; // Reverse 1→5, 2→4, etc.
+                    if ((testType === 'eq' && index === 5) || (testType === 'anxiety' && index === 5)) {
+                        questionValue = 6 - questionValue;
                         scoreDetails.push(`Q${index+1}: ${originalValue} → ${questionValue} pts (reversed)`);
                     } else {
                         scoreDetails.push(`Q${index+1}: ${questionValue} pts`);
@@ -1243,7 +1010,6 @@ const app = initializeApp(firebaseConfig);
                     score += questionValue;
                 });
 
-                // Determine the level based on score
                 let level, message, details, advice;
                 
                 if (testType === 'eq') {
@@ -1284,7 +1050,7 @@ const app = initializeApp(firebaseConfig);
                             </ul>
                         `;
                     }
-                } else { // Anxiety test
+                } else {
                     if (score >= 20) {
                         level = "High Anxiety";
                         message = "Significant Anxiety Level";
@@ -1324,26 +1090,30 @@ const app = initializeApp(firebaseConfig);
                     }
                 }
 
-                // Store the result
+                // Sauvegarder le résultat
                 const testResult = {
                     email: email,
                     score: score,
                     level: level,
                     date: new Date().toLocaleString(),
-                    testType: testType
+                    testType: testType,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 };
                 
-                let allResults = JSON.parse(localStorage.getItem('testResults')) || [];
-                allResults.push(testResult);
-                localStorage.setItem('testResults', JSON.stringify(allResults));
-                
-                // Synchroniser avec les autres appareils admin
-                syncResultsWithAdmin();
-                
-                showResults(testType, level, message, details, advice, scoreDetails);
+                try {
+                    await db.collection("testResults").add(testResult);
+                    showResults(testType, level, message, details, advice, scoreDetails);
+                } catch (error) {
+                    console.error("Error saving to Firestore:", error);
+                    // Fallback to localStorage
+                    let allResults = JSON.parse(localStorage.getItem('testResults')) || [];
+                    allResults.push(testResult);
+                    localStorage.setItem('testResults', JSON.stringify(allResults));
+                    showResults(testType, level, message, details, advice, scoreDetails);
+                }
             }
 
-            // Show results
+            // Afficher les résultats
             function showResults(testType, level, message, details, advice, scoreDetails) {
                 const testContainer = document.getElementById(`${testType}Test`);
                 const resultContainer = document.getElementById(`${testType}Result`);
@@ -1352,46 +1122,161 @@ const app = initializeApp(firebaseConfig);
                 const detailsElement = document.getElementById(`${testType}Details`);
                 const adviceElement = document.getElementById(`${testType}Advice`);
                 
-                // Hide test and show results
                 testContainer.style.display = 'none';
                 resultContainer.style.display = 'block';
                 
-                // Display results
                 finalLevel.textContent = level;
                 messageElement.textContent = message;
                 detailsElement.textContent = details;
                 adviceElement.innerHTML = advice;
-                
-                // Display calculation details (hidden from user but stored)
-                document.getElementById(`${testType}ScoreDetails`).innerHTML = scoreDetails.join('<br>');
             }
 
-            // Restart buttons
-            document.getElementById('eqRestartBtn').addEventListener('click', function() {
-                resetTest('eq');
+            // Charger les résultats
+            async function loadResults() {
+                const resultsList = document.getElementById('resultsList');
+                resultsList.innerHTML = '<p>Loading results...</p>';
+
+                try {
+                    const snapshot = await db.collection("testResults")
+                                          .orderBy("timestamp", "desc")
+                                          .limit(100)
+                                          .get();
+                    
+                    if (snapshot.empty) {
+                        resultsList.innerHTML = '<p>No test results yet.</p>';
+                        return;
+                    }
+                    
+                    resultsList.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const result = doc.data();
+                        const resultDiv = document.createElement('div');
+                        resultDiv.className = 'test-result';
+                        resultDiv.innerHTML = `
+                            <p><strong>Test:</strong> ${result.testType.toUpperCase()}</p>
+                            <p><strong>Email:</strong> ${result.email || 'Anonymous'}</p>
+                            <p><strong>Result:</strong> ${result.level}</p>
+                            <p><strong>Score:</strong> ${result.score}</p>
+                            <p><strong>Date:</strong> ${new Date(result.date).toLocaleString()}</p>
+                            <hr>
+                        `;
+                        resultsList.appendChild(resultDiv);
+                    });
+                } catch (error) {
+                    console.error("Error loading results:", error);
+                    resultsList.innerHTML = '<p>Error loading results. Please try again.</p>';
+                }
+            }
+
+            // Exporter en CSV
+            async function exportToCSV() {
+                try {
+                    const snapshot = await db.collection("testResults").get();
+                    if (snapshot.empty) {
+                        alert('No results to export');
+                        return;
+                    }
+                    
+                    let csv = 'Test Type,Email,Result,Score,Date\n';
+                    snapshot.forEach(doc => {
+                        const result = doc.data();
+                        csv += `${result.testType},${result.email || 'Anonymous'},"${result.level}",${result.score},${result.date}\n`;
+                    });
+                    
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.setAttribute('hidden', '');
+                    a.setAttribute('href', url);
+                    a.setAttribute('download', 'psychological_test_results.csv');
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } catch (error) {
+                    console.error("Export failed:", error);
+                    alert('Export failed. Please try again.');
+                }
+            }
+
+            // Synchronisation
+            function syncResultsWithAdmin() {
+                if (adminResults.style.display === 'block') {
+                    syncNotification.style.display = 'block';
+                    setTimeout(() => {
+                        syncNotification.style.display = 'none';
+                    }, 3000);
+                    loadResults();
+                }
+            }
+
+            // Auto-sync
+            let autoSyncInterval;
+            function startAutoSync() {
+                autoSyncInterval = setInterval(syncResultsWithAdmin, 5000);
+            }
+            
+            function stopAutoSync() {
+                clearInterval(autoSyncInterval);
+            }
+            
+            autoSyncCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    startAutoSync();
+                } else {
+                    stopAutoSync();
+                }
             });
             
-            document.getElementById('anxietyRestartBtn').addEventListener('click', function() {
-                resetTest('anxiety');
-            });
+            if (autoSyncCheckbox.checked) {
+                startAutoSync();
+            }
 
+            // Réinitialiser les tests
             function resetTest(testType) {
                 const form = document.getElementById(`${testType}Form`);
                 const testContainer = document.getElementById(`${testType}Test`);
                 const resultContainer = document.getElementById(`${testType}Result`);
                 
-                // Reset form
                 form.reset();
-                
-                // Hide results and show test
                 resultContainer.style.display = 'none';
                 testContainer.style.display = 'block';
-                
-                // Reset progress
                 initTest(testType);
             }
 
-            // Initialize EQ test on load
+            // Gestion des boutons de réinitialisation
+            eqRestartBtn.addEventListener('click', function() {
+                resetTest('eq');
+            });
+            
+            anxietyRestartBtn.addEventListener('click', function() {
+                resetTest('anxiety');
+            });
+
+            // Changer de test
+            function switchTest(activeTest) {
+                document.querySelectorAll('.test-container, .result-container').forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                eqBtn.classList.remove('active');
+                anxietyBtn.classList.remove('active');
+                
+                if (activeTest === 'eq') {
+                    eqTest.style.display = 'block';
+                    eqBtn.classList.add('active');
+                    initTest('eq');
+                } else {
+                    anxietyTest.style.display = 'block';
+                    anxietyBtn.classList.add('active');
+                    initTest('anxiety');
+                }
+            }
+
+            // Écouteurs d'événements
+            eqBtn.addEventListener('click', () => switchTest('eq'));
+            anxietyBtn.addEventListener('click', () => switchTest('anxiety'));
+
+            // Initialisation
             switchTest('eq');
         });
     </script>
