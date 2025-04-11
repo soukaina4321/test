@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psychological  siyjTests | EQ & Anxiety</title>
+    <title>Psychological soukaTests | EQ & Anxiety</title>
     <style>
         :root {
             --primary: #5e35b1;
@@ -400,6 +400,7 @@
             color: var(--danger);
             font-weight: bold;
             font-size: 1.2rem;
+            display: none;
         }
 
         @media (max-width: 600px) {
@@ -470,8 +471,8 @@
         </div>
 
         <!-- Message si test déjà passé -->
-        <div class="already-taken-message" id="alreadyTakenMessage" style="display: none;">
-            Vous avez déjà passé ce test. Une seule tentative est autorisée.
+        <div class="already-taken-message" id="alreadyTakenMessage">
+            Vous avez déjà passé les deux tests. Une seule tentative est autorisée pour chaque test.
         </div>
 
         <div class="test-selector">
@@ -860,7 +861,6 @@
                     <div id="eqAdvice"></div>
                 </div>
             </div>
-            <button class="btn restart-btn" id="eqRestartBtn">Retake Test</button>
         </div>
 
         <!-- Anxiety Results -->
@@ -876,7 +876,6 @@
                     <div id="anxietyAdvice"></div>
                 </div>
             </div>
-            <button class="btn restart-btn" id="anxietyRestartBtn">Retake Test</button>
         </div>
 
         <footer>
@@ -920,26 +919,45 @@
             const anxietyBtn = document.getElementById('anxietyBtn');
             const eqTest = document.getElementById('eqTest');
             const anxietyTest = document.getElementById('anxietyTest');
-            const eqRestartBtn = document.getElementById('eqRestartBtn');
-            const anxietyRestartBtn = document.getElementById('anxietyRestartBtn');
             const alreadyTakenMessage = document.getElementById('alreadyTakenMessage');
             const emailContainer = document.getElementById('emailContainer');
             
             const ADMIN_PASSWORD = "admin123";
             
-            // Vérifier si l'utilisateur a déjà passé un test
-            function hasUserTakenTest() {
-                return localStorage.getItem('testTaken') === 'true';
+            // Vérifier si l'utilisateur a déjà passé un test spécifique
+            function hasUserTakenTest(testType) {
+                const testsTaken = JSON.parse(localStorage.getItem('testsTaken')) || {};
+                return testsTaken[testType] === true;
+            }
+            
+            // Marquer un test comme complété
+            function markTestAsTaken(testType) {
+                const testsTaken = JSON.parse(localStorage.getItem('testsTaken')) || {};
+                testsTaken[testType] = true;
+                localStorage.setItem('testsTaken', JSON.stringify(testsTaken));
             }
             
             // Désactiver l'interface si test déjà passé
-            function disableTestInterface() {
-                document.querySelectorAll('.test-btn').forEach(btn => {
-                    btn.classList.add('disabled');
-                    btn.disabled = true;
-                });
-                emailContainer.style.display = 'none';
-                alreadyTakenMessage.style.display = 'block';
+            function disableTestInterface(testType) {
+                if (testType === 'eq') {
+                    eqBtn.classList.add('disabled');
+                    eqBtn.disabled = true;
+                } else {
+                    anxietyBtn.classList.add('disabled');
+                    anxietyBtn.disabled = true;
+                }
+                
+                // Afficher le message si les deux tests sont complétés
+                if (hasUserTakenTest('eq') && hasUserTakenTest('anxiety')) {
+                    alreadyTakenMessage.style.display = 'block';
+                    alreadyTakenMessage.textContent = "Vous avez déjà passé les deux tests. Une seule tentative est autorisée pour chaque test.";
+                } else if (testType === 'eq') {
+                    alreadyTakenMessage.style.display = 'block';
+                    alreadyTakenMessage.textContent = "Vous avez déjà passé le test EQ. Vous pouvez encore passer le test Anxiety.";
+                } else if (testType === 'anxiety') {
+                    alreadyTakenMessage.style.display = 'block';
+                    alreadyTakenMessage.textContent = "Vous avez déjà passé le test Anxiety. Vous pouvez encore passer le test EQ.";
+                }
             }
             
             // Afficher le panneau admin
@@ -974,26 +992,27 @@
                 syncResultsWithAdmin();
             });
 
-            // Vérifier l'unicité de l'email dans Firebase
-            async function isEmailUnique(email) {
+            // Vérifier l'unicité de l'email pour un test spécifique
+            async function isEmailUniqueForTest(email, testType) {
                 if (!email || email === 'Anonymous') return true;
                 
                 try {
                     const snapshot = await db.collection("testResults")
                                           .where("email", "==", email)
+                                          .where("testType", "==", testType)
                                           .limit(1)
                                           .get();
                     return snapshot.empty;
                 } catch (error) {
                     console.error("Error checking email:", error);
-                    return true; // En cas d'erreur, laisser passer
+                    return true;
                 }
             }
 
             // Initialiser les tests
             function initTest(testType) {
-                if (hasUserTakenTest()) {
-                    disableTestInterface();
+                if (hasUserTakenTest(testType)) {
+                    disableTestInterface(testType);
                     return;
                 }
                 
@@ -1044,9 +1063,9 @@
                     
                     const email = document.getElementById('userEmail').value || 'Anonymous';
                     
-                    // Vérifier l'unicité de l'email
-                    if (email !== 'Anonymous' && !(await isEmailUnique(email))) {
-                        alert('Cet email a déjà été utilisé pour passer le test. Une seule tentative est autorisée par email.');
+                    // Vérifier l'unicité de l'email pour ce test
+                    if (email !== 'Anonymous' && !(await isEmailUniqueForTest(email, testType))) {
+                        alert(`Cet email a déjà été utilisé pour passer le test ${testType}. Une seule tentative est autorisée par test.`);
                         return;
                     }
                     
@@ -1171,9 +1190,9 @@
                 try {
                     await db.collection("testResults").add(testResult);
                     
-                    // Marquer comme test effectué
-                    localStorage.setItem('testTaken', 'true');
-                    disableTestInterface();
+                    // Marquer ce test spécifique comme complété
+                    markTestAsTaken(testType);
+                    disableTestInterface(testType);
                     
                     showResults(testType, level, message, details, advice, scoreDetails);
                 } catch (error) {
@@ -1182,8 +1201,8 @@
                     let allResults = JSON.parse(localStorage.getItem('testResults')) || [];
                     allResults.push(testResult);
                     localStorage.setItem('testResults', JSON.stringify(allResults));
-                    localStorage.setItem('testTaken', 'true');
-                    disableTestInterface();
+                    markTestAsTaken(testType);
+                    disableTestInterface(testType);
                     showResults(testType, level, message, details, advice, scoreDetails);
                 }
             }
@@ -1204,6 +1223,17 @@
                 messageElement.textContent = message;
                 detailsElement.textContent = details;
                 adviceElement.innerHTML = advice;
+                
+                // Passer automatiquement à l'autre test si disponible
+                if (testType === 'eq' && !hasUserTakenTest('anxiety')) {
+                    setTimeout(() => {
+                        switchTest('anxiety');
+                    }, 3000);
+                } else if (testType === 'anxiety' && !hasUserTakenTest('eq')) {
+                    setTimeout(() => {
+                        switchTest('eq');
+                    }, 3000);
+                }
             }
 
             // Charger les résultats
@@ -1306,34 +1336,12 @@
                 startAutoSync();
             }
 
-            // Réinitialiser les tests (admin seulement)
-            function resetTest(testType) {
-                if (adminResults.style.display !== 'block') {
-                    alert('Seul un administrateur peut réinitialiser les tests.');
+            // Changer de test
+            function switchTest(activeTest) {
+                if (hasUserTakenTest(activeTest)) {
                     return;
                 }
                 
-                const form = document.getElementById(`${testType}Form`);
-                const testContainer = document.getElementById(`${testType}Test`);
-                const resultContainer = document.getElementById(`${testType}Result`);
-                
-                form.reset();
-                resultContainer.style.display = 'none';
-                testContainer.style.display = 'block';
-                initTest(testType);
-            }
-
-            // Gestion des boutons de réinitialisation
-            eqRestartBtn.addEventListener('click', function() {
-                resetTest('eq');
-            });
-            
-            anxietyRestartBtn.addEventListener('click', function() {
-                resetTest('anxiety');
-            });
-
-            // Changer de test
-            function switchTest(activeTest) {
                 document.querySelectorAll('.test-container, .result-container').forEach(el => {
                     el.style.display = 'none';
                 });
@@ -1353,16 +1361,35 @@
             }
 
             // Écouteurs d'événements
-            eqBtn.addEventListener('click', () => switchTest('eq'));
-            anxietyBtn.addEventListener('click', () => switchTest('anxiety'));
+            eqBtn.addEventListener('click', () => {
+                if (!hasUserTakenTest('eq')) {
+                    switchTest('eq');
+                }
+            });
+            
+            anxietyBtn.addEventListener('click', () => {
+                if (!hasUserTakenTest('anxiety')) {
+                    switchTest('anxiety');
+                }
+            });
 
-            // Vérifier au chargement si test déjà passé
-            if (hasUserTakenTest()) {
-                disableTestInterface();
+            // Vérifier au chargement si tests déjà passés
+            if (hasUserTakenTest('eq')) {
+                disableTestInterface('eq');
+            }
+            
+            if (hasUserTakenTest('anxiety')) {
+                disableTestInterface('anxiety');
             }
 
-            // Initialisation
-            switchTest('eq');
+            // Initialisation - afficher le premier test disponible
+            if (!hasUserTakenTest('eq')) {
+                switchTest('eq');
+            } else if (!hasUserTakenTest('anxiety')) {
+                switchTest('anxiety');
+            } else {
+                alreadyTakenMessage.style.display = 'block';
+            }
         });
     </script>
 </body>
