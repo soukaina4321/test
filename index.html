@@ -17,7 +17,6 @@
             --box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
         }
-
         * {
             margin: 0;
             padding: 0;
@@ -31,7 +30,6 @@
             line-height: 1.6;
             padding: 20px;
         }
-
         .container {
             max-width: 800px;
             margin: 40px auto;
@@ -47,7 +45,6 @@
             padding: 30px;
             text-align: center;
         }
-
         h1 {
             font-size: 2.2rem;
             margin-bottom: 10px;
@@ -60,7 +57,6 @@
             margin: 20px 0;
             padding: 0 20px;
         }
-
         .test-btn {
             background: white;
             color: var(--primary);
@@ -74,7 +70,6 @@
             text-align: center;
             max-width: 200px;
         }
-
         .test-btn:hover, .test-btn.active {
             background: var(--primary);
             color: white;
@@ -90,7 +85,6 @@
             display: block;
             animation: fadeIn 0.5s;
         }
-
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -107,7 +101,6 @@
             overflow: hidden;
             margin-bottom: 10px;
         }
-
         .progress {
             height: 100%;
             background: linear-gradient(90deg, var(--accent), var(--success));
@@ -122,7 +115,6 @@
             background-color: var(--light);
             display: none;
         }
-
         .question.active {
             display: block;
             animation: slideIn 0.4s;
@@ -138,7 +130,6 @@
             margin-bottom: 15px;
             font-size: 1.1rem;
         }
-
         .rating-scale {
             display: flex;
             justify-content: space-between;
@@ -151,7 +142,6 @@
             display: flex;
             justify-content: space-between;
         }
-
         .radio-option {
             display: flex;
             flex-direction: column;
@@ -169,12 +159,10 @@
             cursor: pointer;
             transition: var(--transition);
         }
-
         input[type="radio"]:checked {
             border-color: var(--primary);
             background-color: var(--primary);
         }
-
         .btn {
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             color: white;
@@ -189,7 +177,6 @@
             width: 100%;
             margin-top: 20px;
         }
-
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(94, 53, 177, 0.3);
@@ -205,7 +192,6 @@
             padding: 30px;
             text-align: center;
         }
-
         .result-level {
             font-size: 2rem;
             font-weight: 700;
@@ -220,7 +206,6 @@
             color: var(--primary);
             border: 2px solid var(--primary);
         }
-
         .anxiety-level {
             background-color: rgba(239, 83, 80, 0.1);
             color: var(--danger);
@@ -239,7 +224,6 @@
             margin-top: 20px;
             text-align: left;
         }
-
         .score-calculation {
             margin-top: 20px;
             padding: 15px;
@@ -257,7 +241,6 @@
             margin-top: 10px;
             font-family: monospace;
         }
-
         .advice-container {
             background-color: #f8f9fa;
             border-left: 4px solid var(--accent);
@@ -275,7 +258,6 @@
             padding-left: 20px;
             margin-top: 10px;
         }
-
         .advice-container li {
             margin-bottom: 8px;
         }
@@ -294,7 +276,6 @@
             font-size: 0.9rem;
             padding: 20px;
         }
-
         .admin-panel {
             display: none;
             position: fixed;
@@ -311,7 +292,6 @@
             border-radius: 50px;
             cursor: pointer;
         }
-
         .admin-login {
             display: none;
             position: fixed;
@@ -326,7 +306,6 @@
             width: 90%;
             max-width: 400px;
         }
-
         .admin-login input {
             width: 100%;
             padding: 10px;
@@ -340,7 +319,6 @@
             max-height: 400px;
             overflow-y: auto;
         }
-
         .test-result {
             padding: 10px;
             border-bottom: 1px solid #eee;
@@ -358,15 +336,12 @@
             margin-bottom: 8px;
             font-weight: 600;
         }
-
         .email-field input {
             width: 100%;
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
         }
-
-        /* Nouveaux styles ajoutés */
         .sync-notification {
             position: fixed;
             bottom: 20px;
@@ -379,7 +354,6 @@
             display: none;
             z-index: 1002;
         }
-
         .sync-controls {
             margin-top: 20px;
             padding: 15px;
@@ -397,7 +371,6 @@
                 width: 100%;
                 max-width: none;
             }
-            
             .radio-options {
                 flex-wrap: wrap;
             }
@@ -453,7 +426,6 @@
                 </div>
             </div>
         </div>
-
         <div class="test-selector">
             <button class="test-btn active" id="eqBtn">EQ Test</button>
             <button class="test-btn" id="anxietyBtn">Anxiety Test</button>
@@ -464,16 +436,14 @@
             <label for="userEmail">Your email (optional):</label>
             <input type="email" id="userEmail" placeholder="email@example.com">
         </div>
-
-        <!-- Emotional Intelligence Test (6 questions) -->
-        <div class="test-container active" id="eqTest">
+         <!-- Emotional Intelligence Test (6 questions) -->
+         <div class="test-container active" id="eqTest">
             <div class="progress-container">
                 <div class="progress-bar">
                     <div class="progress" id="eqProgress"></div>
                 </div>
                 <div id="eqProgressText">Question 1 of 6</div>
             </div>
-
             <form id="eqForm">
                 <!-- Question 1 -->
                 <div class="question active" id="eqQ1">
@@ -532,9 +502,8 @@
                         </label>
                     </div>
                 </div>
-
-                <!-- Question 3 -->
-                <div class="question" id="eqQ3">
+                 <!-- Question 3 -->
+                 <div class="question" id="eqQ3">
                     <div class="question-text">3. I can recognize emotions in other people.</div>
                     <div class="radio-options">
                         <label class="radio-option">
@@ -559,9 +528,8 @@
                         </label>
                     </div>
                 </div>
-
-                <!-- Question 4 -->
-                <div class="question" id="eqQ4">
+                 <!-- Question 4 -->
+                 <div class="question" id="eqQ4">
                     <div class="question-text">4. I manage my emotions appropriately in difficult situations.</div>
                     <div class="radio-options">
                         <label class="radio-option">
@@ -586,7 +554,6 @@
                         </label>
                     </div>
                 </div>
-
                 <!-- Question 5 -->
                 <div class="question" id="eqQ5">
                     <div class="question-text">5. I use emotional understanding to improve my relationships.</div>
@@ -613,7 +580,6 @@
                         </label>
                     </div>
                 </div>
-
                 <!-- Question 6 (reversed) -->
                 <div class="question" id="eqQ6">
                     <div class="question-text">6. I often feel overwhelmed by my emotions. (reversed)</div>
@@ -640,7 +606,6 @@
                         </label>
                     </div>
                 </div>
-
                 <button type="button" class="btn" id="eqNextBtn">Next Question</button>
                 <button type="submit" class="btn" id="eqSubmitBtn" style="display: none;">View Results</button>
             </form>
@@ -654,7 +619,6 @@
                 </div>
                 <div id="anxietyProgressText">Question 1 of 6</div>
             </div>
-
             <form id="anxietyForm">
                 <!-- Question 1 -->
                 <div class="question active" id="anxietyQ1">
@@ -713,7 +677,6 @@
                         </label>
                     </div>
                 </div>
-
                 <!-- Question 3 -->
                 <div class="question" id="anxietyQ3">
                     <div class="question-text">3. I have trouble relaxing.</div>
@@ -740,7 +703,6 @@
                         </label>
                     </div>
                 </div>
-
                 <!-- Question 4 -->
                 <div class="question" id="anxietyQ4">
                     <div class="question-text">4. I feel afraid without apparent reason.</div>
@@ -767,7 +729,6 @@
                         </label>
                     </div>
                 </div>
-
                 <!-- Question 5 -->
                 <div class="question" id="anxietyQ5">
                     <div class="question-text">5. I feel restless or on edge.</div>
@@ -794,7 +755,6 @@
                         </label>
                     </div>
                 </div>
-
                 <!-- Question 6 (reversed) -->
                 <div class="question" id="anxietyQ6">
                     <div class="question-text">6. I feel calm and peaceful. (reversed)</div>
@@ -821,12 +781,10 @@
                         </label>
                     </div>
                 </div>
-
                 <button type="button" class="btn" id="anxietyNextBtn">Next Question</button>
                 <button type="submit" class="btn" id="anxietySubmitBtn" style="display: none;">View Results</button>
             </form>
         </div>
-
         <!-- EQ Results -->
         <div class="result-container" id="eqResult">
             <h2>Your Emotional Intelligence Result</h2>
@@ -863,8 +821,147 @@
             <p>© 2025 Psychological Tests | These tests are for informational purposes only</p>
         </footer>
     </div>
+    <!-- Ajoutez ces scripts AVANT votre script principal -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configuration Firebase - À REMPLACER avec vos infos
+            const firebaseConfig = {
+                apiKey: "AIzaSyABCD1234EFGH5678IJKL",
+                authDomain: "your-project-id.firebaseapp.com",
+                projectId: "your-project-id",
+                storageBucket: "your-project-id.appspot.com",
+                messagingSenderId: "1234567890",
+                appId: "1:1234567890:web:abcd1234efgh5678"
+            };
+
+            // Initialiser Firebase
+            firebase.initializeApp(firebaseConfig);
+            const db = firebase.firestore();
+
+            // [Conservez toutes vos variables existantes]
+            const adminBtn = document.getElementById('adminBtn');
+            // ... (toutes les autres variables)
+
+            // Modifiez la fonction calculateScore()
+            async function calculateScore(testType) {
+                const email = document.getElementById('userEmail').value || 'Anonymous';
+                const inputs = document.querySelectorAll(`#${testType}Form input[type="radio"]:checked`);
+                let score = 0;
+                
+                inputs.forEach((input, index) => {
+                    let questionValue = parseInt(input.value);
+                    if ((testType === 'eq' && index === 5) || (testType === 'anxiety' && index === 5)) {
+                        questionValue = 6 - questionValue;
+                    }
+                    score += questionValue;
+                });
+
+                // [Conservez la logique de niveau/message/advice existante]
+                let level, message, details, advice;
+                if (testType === 'eq') {
+                    // ... (votre logique existante)
+                } else {
+                    // ... (votre logique existante)
+                }
+
+                // Sauvegarder dans Firebase
+                const testResult = {
+                    email: email,
+                    score: score,
+                    level: level,
+                    date: new Date().toISOString(),
+                    testType: testType,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                try {
+                    await db.collection("testResults").add(testResult);
+                    showResults(testType, level, message, details, advice);
+                } catch (error) {
+                    console.error("Error saving result:", error);
+                    // Fallback au localStorage si Firebase échoue
+                    localStorage.setItem(`lastResult_${Date.now()}`, JSON.stringify(testResult));
+                    showResults(testType, level, message, details, advice);
+                }
+            }
+
+            // Nouvelle fonction loadResults()
+            async function loadResults() {
+                const resultsList = document.getElementById('resultsList');
+                resultsList.innerHTML = '<p>Loading results...</p>';
+
+                try {
+                    const snapshot = await db.collection("testResults")
+                                          .orderBy("timestamp", "desc")
+                                          .limit(100)
+                                          .get();
+                    
+                    if (snapshot.empty) {
+                        resultsList.innerHTML = '<p>No test results yet.</p>';
+                        return;
+                    }
+                    
+                    resultsList.innerHTML = '';
+                    snapshot.forEach(doc => {
+                        const result = doc.data();
+                        const resultDiv = document.createElement('div');
+                        resultDiv.className = 'test-result';
+                        resultDiv.innerHTML = `
+                            <p><strong>Test:</strong> ${result.testType.toUpperCase()}</p>
+                            <p><strong>Email:</strong> ${result.email || 'Anonymous'}</p>
+                            <p><strong>Result:</strong> ${result.level}</p>
+                            <p><strong>Score:</strong> ${result.score}</p>
+                            <p><strong>Date:</strong> ${new Date(result.date).toLocaleString()}</p>
+                            <hr>
+                        `;
+                        resultsList.appendChild(resultDiv);
+                    });
+                } catch (error) {
+                    console.error("Error loading results:", error);
+                    resultsList.innerHTML = '<p>Error loading results. Please try again.</p>';
+                }
+            }
+
+            // Modifiez exportToCSV()
+            async function exportToCSV() {
+                try {
+                    const snapshot = await db.collection("testResults").get();
+                    if (snapshot.empty) {
+                        alert('No results to export');
+                        return;
+                    }
+                    
+                    let csv = 'Test Type,Email,Result,Score,Date\n';
+                    snapshot.forEach(doc => {
+                        const result = doc.data();
+                        csv += `${result.testType},${result.email || 'Anonymous'},"${result.level}",${result.score},${result.date}\n`;
+                    });
+                    
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.setAttribute('hidden', '');
+                    a.setAttribute('href', url);
+                    a.setAttribute('download', 'psychological_test_results.csv');
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } catch (error) {
+                    console.error("Export failed:", error);
+                    alert('Export failed. Please try again.');
+                }
+            }
+
+            // [Conservez toutes les autres fonctions existantes]
+            // ... (switchTest, initTest, showResults, resetTest, etc.)
+
+            // Initialisation
+            switchTest('eq');
+            document.querySelector('.admin-panel').style.display = 'block';
+        });
         document.addEventListener('DOMContentLoaded', function() {
             // Admin functionality
             const adminBtn = document.getElementById('adminBtn');
