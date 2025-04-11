@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tests Psychologiques  soukaina| QE & Anxiété</title>
+    <title>Psychological Tests | EQ & Anxiety</title>
     <style>
         :root {
             --primary: #5e35b1;
@@ -53,7 +53,7 @@
             margin-bottom: 10px;
         }
 
-        /* Styles pour la section des informations utilisateur */
+        /* User info section styles */
         .user-info-section {
             padding: 20px;
             background: var(--light);
@@ -466,15 +466,15 @@
     </style>
 </head>
 <body>
-    <!-- Notification de synchronisation -->
+    <!-- Sync notification -->
     <div class="sync-notification" id="syncNotification">
         New test results synchronized!
     </div>
 
     <div class="container">
         <header>
-            <h1>Tests Psychologiques</h1>
-            <p>Évaluez votre intelligence émotionnelle et votre niveau d'anxiété</p>
+            <h1>Psychological Tests</h1>
+            <p>Assess your emotional intelligence and anxiety level</p>
         </header>
 
         <!-- Admin Panel Button -->
@@ -484,69 +484,67 @@
 
         <!-- Admin Login -->
         <div class="admin-login" id="adminLogin">
-            <h2>Connexion Admin</h2>
-            <input type="password" id="adminPassword" placeholder="Entrez le mot de passe admin">
-            <button class="btn" id="loginBtn">Connexion</button>
+            <h2>Admin Login</h2>
+            <input type="password" id="adminPassword" placeholder="Enter admin password">
+            <button class="btn" id="loginBtn">Login</button>
             <div id="loginError" style="color: var(--danger); margin-top: 10px;"></div>
         </div>
 
         <!-- Admin Results -->
         <div class="admin-login" id="adminResults" style="display: none;">
-            <h2>Résultats des Tests</h2>
-            <button class="btn" id="logoutBtn" style="margin-bottom: 20px;">Déconnexion</button>
+            <h2>Test Results</h2>
+            <button class="btn" id="logoutBtn" style="margin-bottom: 20px;">Logout</button>
             <div class="admin-results" id="resultsList">
                 <!-- Results will be displayed here -->
             </div>
-            <button class="btn" id="exportBtn" style="margin-top: 20px;">Exporter en CSV</button>
+            <button class="btn" id="exportBtn" style="margin-top: 20px;">Export to CSV</button>
             
-            <!-- Contrôles de synchronisation -->
+            <!-- Sync controls -->
             <div class="sync-controls">
-                <button class="btn" id="manualSyncBtn">Synchroniser</button>
+                <button class="btn" id="manualSyncBtn">Sync Now</button>
                 <div style="margin-top: 10px;">
                     <label>
-                        <input type="checkbox" id="autoSyncCheckbox" checked> Synchronisation auto (5s)
+                        <input type="checkbox" id="autoSyncCheckbox" checked> Auto Sync (5s)
                     </label>
                 </div>
             </div>
         </div>
 
-        <!-- Section des informations utilisateur -->
+        <!-- User information section -->
         <div class="user-info-section" id="userInfoForm">
-            <h3>Informations Personnelles</h3>
+            <h3>Personal Information</h3>
             <div class="user-info-field">
-                <label for="fullName">Nom Complet:</label>
-                <input type="text" id="fullName" placeholder="Prénom Nom" required>
+                <label for="fullName">Full Name:</label>
+                <input type="text" id="fullName" placeholder="First Last" required>
             </div>
             <div class="user-info-field">
-                <label>Genre:</label>
+                <label>Gender:</label>
                 <div class="gender-options">
                     <label class="gender-option">
-                        <input type="radio" name="gender" value="Homme" required> Homme
+                        <input type="radio" name="gender" value="Male" required> Male
                     </label>
                     <label class="gender-option">
-                        <input type="radio" name="gender" value="Femme"> Femme
-                    </label>
-                    <label class="gender-option">
-                        <input type="radio" name="gender" value="Autre"> Autre
+                        <input type="radio" name="gender" value="Female"> Female
                     </label>
                 </div>
             </div>
+            <button class="btn" id="saveUserInfoBtn">Save Information</button>
         </div>
 
-        <!-- Affichage des informations utilisateur (après soumission) -->
+        <!-- Display user information (after submission) -->
         <div class="user-info-display" id="userInfoDisplay" style="display: none;">
             <p id="displayName"></p>
             <p id="displayGender"></p>
         </div>
 
-        <!-- Message si test déjà passé -->
+        <!-- Message if test already taken -->
         <div class="already-taken-message" id="alreadyTakenMessage">
-            Vous avez déjà passé les deux tests. Une seule tentative est autorisée pour chaque test.
+            You have already taken both tests. Only one attempt is allowed for each test.
         </div>
 
         <div class="test-selector">
-            <button class="test-btn active" id="eqBtn">Test QE</button>
-            <button class="test-btn" id="anxietyBtn">Test Anxiété</button>
+            <button class="test-btn active" id="eqBtn">EQ Test</button>
+            <button class="test-btn" id="anxietyBtn">Anxiety Test</button>
         </div>
 
         <!-- Emotional Intelligence Test (6 questions) -->
@@ -555,16 +553,16 @@
                 <div class="progress-bar">
                     <div class="progress" id="eqProgress"></div>
                 </div>
-                <div id="eqProgressText">Question 1 sur 6</div>
+                <div id="eqProgressText">Question 1 of 6</div>
             </div>
 
             <form id="eqForm">
                 <!-- Question 1 -->
                 <div class="question active" id="eqQ1">
-                    <div class="question-text">1. Je peux facilement identifier mes émotions quand je les ressens.</div>
+                    <div class="question-text">1. I can easily identify my emotions when I feel them.</div>
                     <div class="rating-scale">
-                        <span>Pas du tout d'accord</span>
-                        <span>Tout à fait d'accord</span>
+                        <span>Strongly disagree</span>
+                        <span>Strongly agree</span>
                     </div>
                     <div class="radio-options">
                         <label class="radio-option">
@@ -592,7 +590,7 @@
 
                 <!-- Question 2 -->
                 <div class="question" id="eqQ2">
-                    <div class="question-text">2. Je comprends comment mes émotions affectent mon comportement.</div>
+                    <div class="question-text">2. I understand how my emotions affect my behavior.</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="eq2" value="1" required>
@@ -619,7 +617,7 @@
 
                 <!-- Question 3 -->
                 <div class="question" id="eqQ3">
-                    <div class="question-text">3. Je peux reconnaître les émotions chez les autres.</div>
+                    <div class="question-text">3. I can recognize emotions in others.</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="eq3" value="1" required>
@@ -646,7 +644,7 @@
 
                 <!-- Question 4 -->
                 <div class="question" id="eqQ4">
-                    <div class="question-text">4. Je gère mes émotions de manière appropriée dans les situations difficiles.</div>
+                    <div class="question-text">4. I manage my emotions appropriately in difficult situations.</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="eq4" value="1" required>
@@ -673,7 +671,7 @@
 
                 <!-- Question 5 -->
                 <div class="question" id="eqQ5">
-                    <div class="question-text">5. J'utilise la compréhension émotionnelle pour améliorer mes relations.</div>
+                    <div class="question-text">5. I use emotional understanding to improve my relationships.</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="eq5" value="1" required>
@@ -700,7 +698,7 @@
 
                 <!-- Question 6 (reversed) -->
                 <div class="question" id="eqQ6">
-                    <div class="question-text">6. Je me sens souvent submergé par mes émotions. (inversé)</div>
+                    <div class="question-text">6. I often feel overwhelmed by my emotions. (reversed)</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="eq6" value="5" required>
@@ -725,8 +723,8 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn" id="eqNextBtn">Question Suivante</button>
-                <button type="submit" class="btn" id="eqSubmitBtn" style="display: none;">Voir les Résultats</button>
+                <button type="button" class="btn" id="eqNextBtn">Next Question</button>
+                <button type="submit" class="btn" id="eqSubmitBtn" style="display: none;">View Results</button>
             </form>
         </div>
 
@@ -736,16 +734,16 @@
                 <div class="progress-bar">
                     <div class="progress" id="anxietyProgress"></div>
                 </div>
-                <div id="anxietyProgressText">Question 1 sur 6</div>
+                <div id="anxietyProgressText">Question 1 of 6</div>
             </div>
 
             <form id="anxietyForm">
                 <!-- Question 1 -->
                 <div class="question active" id="anxietyQ1">
-                    <div class="question-text">1. Je me sens tendu ou nerveux.</div>
+                    <div class="question-text">1. I feel tense or nervous.</div>
                     <div class="rating-scale">
-                        <span>Jamais</span>
-                        <span>Toujours</span>
+                        <span>Never</span>
+                        <span>Always</span>
                     </div>
                     <div class="radio-options">
                         <label class="radio-option">
@@ -773,7 +771,7 @@
 
                 <!-- Question 2 -->
                 <div class="question" id="anxietyQ2">
-                    <div class="question-text">2. Je m'inquiète excessivement.</div>
+                    <div class="question-text">2. I worry excessively.</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="aq2" value="1" required>
@@ -800,7 +798,7 @@
 
                 <!-- Question 3 -->
                 <div class="question" id="anxietyQ3">
-                    <div class="question-text">3. J'ai du mal à me détendre.</div>
+                    <div class="question-text">3. I have trouble relaxing.</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="aq3" value="1" required>
@@ -827,7 +825,7 @@
 
                 <!-- Question 4 -->
                 <div class="question" id="anxietyQ4">
-                    <div class="question-text">4. Je me sens effrayé sans raison apparente.</div>
+                    <div class="question-text">4. I feel frightened for no apparent reason.</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="aq4" value="1" required>
@@ -854,7 +852,7 @@
 
                 <!-- Question 5 -->
                 <div class="question" id="anxietyQ5">
-                    <div class="question-text">5. Je me sens agité ou sur les nerfs.</div>
+                    <div class="question-text">5. I feel restless or on edge.</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="aq5" value="1" required>
@@ -881,7 +879,7 @@
 
                 <!-- Question 6 (reversed) -->
                 <div class="question" id="anxietyQ6">
-                    <div class="question-text">6. Je me sens calme et en paix. (inversé)</div>
+                    <div class="question-text">6. I feel calm and peaceful. (reversed)</div>
                     <div class="radio-options">
                         <label class="radio-option">
                             <input type="radio" name="aq6" value="5" required>
@@ -906,21 +904,21 @@
                     </div>
                 </div>
 
-                <button type="button" class="btn" id="anxietyNextBtn">Question Suivante</button>
-                <button type="submit" class="btn" id="anxietySubmitBtn" style="display: none;">Voir les Résultats</button>
+                <button type="button" class="btn" id="anxietyNextBtn">Next Question</button>
+                <button type="submit" class="btn" id="anxietySubmitBtn" style="display: none;">View Results</button>
             </form>
         </div>
 
         <!-- EQ Results -->
         <div class="result-container" id="eqResult">
-            <h2>Votre Résultat d'Intelligence Émotionnelle</h2>
+            <h2>Your Emotional Intelligence Result</h2>
             <div class="result-level eq-level" id="eqFinalLevel"></div>
             <div class="result-message" id="eqMessage"></div>
             <div class="result-details">
                 <p id="eqDetails"></p>
                 
                 <div class="advice-container">
-                    <h3>Conseils Personnalisés</h3>
+                    <h3>Personalized Advice</h3>
                     <div id="eqAdvice"></div>
                 </div>
             </div>
@@ -928,21 +926,21 @@
 
         <!-- Anxiety Results -->
         <div class="result-container" id="anxietyResult">
-            <h2>Votre Niveau d'Anxiété</h2>
+            <h2>Your Anxiety Level</h2>
             <div class="result-level anxiety-level" id="anxietyFinalLevel"></div>
             <div class="result-message" id="anxietyMessage"></div>
             <div class="result-details">
                 <p id="anxietyDetails"></p>
                 
                 <div class="advice-container">
-                    <h3>Conseils Personnalisés</h3>
+                    <h3>Personalized Advice</h3>
                     <div id="anxietyAdvice"></div>
                 </div>
             </div>
         </div>
 
         <footer>
-            <p>© 2025 Tests Psychologiques | Ces tests sont à titre informatif uniquement</p>
+            <p>© 2025 Psychological Tests | These tests are for informational purposes only</p>
         </footer>
     </div>
 
@@ -952,21 +950,21 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Configuration Firebase
+            // Firebase configuration
             const firebaseConfig = {
                 apiKey: "AIzaSyAopnRGVW4PP8qtw3umyv8i0eItqhbj61Q",
                 authDomain: "psychologicaltests-8ed93.firebaseapp.com",
                 projectId: "psychologicaltests-8ed93",
-                storageBucket: "psychologicaltests-8ed93.firebasestorage.app",
+                storageBucket: "psychologicaltests-8ed93.appspot.com",
                 messagingSenderId: "446430873510",
                 appId: "1:446430873510:web:29eda97177a2eb5f54f167"
             };
 
-            // Initialiser Firebase
+            // Initialize Firebase
             firebase.initializeApp(firebaseConfig);
             const db = firebase.firestore();
 
-            // Variables d'interface
+            // UI elements
             const adminBtn = document.getElementById('adminBtn');
             const adminLogin = document.getElementById('adminLogin');
             const adminResults = document.getElementById('adminResults');
@@ -988,29 +986,30 @@
             const displayName = document.getElementById('displayName');
             const displayGender = document.getElementById('displayGender');
             const fullNameInput = document.getElementById('fullName');
+            const saveUserInfoBtn = document.getElementById('saveUserInfoBtn');
             
             const ADMIN_PASSWORD = "admin123";
             
-            // Variables pour stocker les infos utilisateur
+            // User info storage
             let userInfo = {
                 fullName: '',
                 gender: ''
             };
 
-            // Vérifier si l'utilisateur a déjà passé un test spécifique
+            // Check if user has already taken a specific test
             function hasUserTakenTest(testType) {
                 const testsTaken = JSON.parse(localStorage.getItem('testsTaken')) || {};
                 return testsTaken[testType] === true;
             }
             
-            // Marquer un test comme complété
+            // Mark a test as completed
             function markTestAsTaken(testType) {
                 const testsTaken = JSON.parse(localStorage.getItem('testsTaken')) || {};
                 testsTaken[testType] = true;
                 localStorage.setItem('testsTaken', JSON.stringify(testsTaken));
             }
             
-            // Désactiver l'interface si test déjà passé
+            // Disable interface if test already taken
             function disableTestInterface(testType) {
                 if (testType === 'eq') {
                     eqBtn.classList.add('disabled');
@@ -1020,39 +1019,39 @@
                     anxietyBtn.disabled = true;
                 }
                 
-                // Afficher le message si les deux tests sont complétés
+                // Show message if both tests are completed
                 if (hasUserTakenTest('eq') && hasUserTakenTest('anxiety')) {
                     alreadyTakenMessage.style.display = 'block';
-                    alreadyTakenMessage.textContent = "Vous avez déjà passé les deux tests. Une seule tentative est autorisée pour chaque test.";
+                    alreadyTakenMessage.textContent = "You have already taken both tests. Only one attempt is allowed for each test.";
                 } else if (testType === 'eq') {
                     alreadyTakenMessage.style.display = 'block';
-                    alreadyTakenMessage.textContent = "Vous avez déjà passé le test QE. Vous pouvez encore passer le test Anxiété.";
+                    alreadyTakenMessage.textContent = "You have already taken the EQ test. You can still take the Anxiety test.";
                 } else if (testType === 'anxiety') {
                     alreadyTakenMessage.style.display = 'block';
-                    alreadyTakenMessage.textContent = "Vous avez déjà passé le test Anxiété. Vous pouvez encore passer le test QE.";
+                    alreadyTakenMessage.textContent = "You have already taken the Anxiety test. You can still take the EQ test.";
                 }
             }
 
-            // Désactiver le formulaire d'infos après soumission
+            // Disable user info form after submission
             function disableUserInfoForm() {
                 userInfoForm.style.display = 'none';
                 userInfoDisplay.style.display = 'block';
                 
-                // Afficher les informations
-                displayName.textContent = `Nom: ${userInfo.fullName}`;
-                displayGender.textContent = `Genre: ${userInfo.gender}`;
+                // Display information
+                displayName.textContent = `Name: ${userInfo.fullName}`;
+                displayGender.textContent = `Gender: ${userInfo.gender}`;
             }
 
-            // Vérifier si les infos ont déjà été soumises
+            // Check if info was already submitted
             if (localStorage.getItem('userInfo')) {
                 userInfo = JSON.parse(localStorage.getItem('userInfo'));
                 disableUserInfoForm();
             }
             
-            // Afficher le panneau admin
+            // Show admin panel
             document.querySelector('.admin-panel').style.display = 'block';
             
-            // Gestion de l'admin
+            // Admin management
             adminBtn.addEventListener('click', function() {
                 adminLogin.style.display = 'block';
             });
@@ -1063,7 +1062,7 @@
                     adminResults.style.display = 'block';
                     loadResults();
                 } else {
-                    loginError.textContent = "Mot de passe incorrect";
+                    loginError.textContent = "Incorrect password";
                 }
             });
             
@@ -1081,22 +1080,32 @@
                 syncResultsWithAdmin();
             });
 
-            // Sauvegarder les infos utilisateur
-            function saveUserInfo() {
+            // Save user info
+            saveUserInfoBtn.addEventListener('click', function() {
                 const gender = document.querySelector('input[name="gender"]:checked');
+                
+                if (!fullNameInput.value.trim()) {
+                    alert('Please enter your full name');
+                    return;
+                }
+                
+                if (!gender) {
+                    alert('Please select your gender');
+                    return;
+                }
                 
                 userInfo = {
                     fullName: fullNameInput.value.trim(),
-                    gender: gender ? gender.value : 'Non spécifié'
+                    gender: gender.value
                 };
                 
                 localStorage.setItem('userInfo', JSON.stringify(userInfo));
                 disableUserInfoForm();
-            }
+            });
 
-            // Vérifier l'unicité du nom pour un test spécifique
+            // Check name uniqueness for a specific test
             async function isNameUniqueForTest(name, testType) {
-                if (!name) return true;
+                if (!name) return false;
                 
                 try {
                     const snapshot = await db.collection("testResults")
@@ -1107,11 +1116,11 @@
                     return snapshot.empty;
                 } catch (error) {
                     console.error("Error checking name:", error);
-                    return true;
+                    return false; // On error, assume name is not unique for safety
                 }
             }
 
-            // Initialiser les tests
+            // Initialize tests
             function initTest(testType) {
                 if (hasUserTakenTest(testType)) {
                     disableTestInterface(testType);
@@ -1134,7 +1143,7 @@
                     
                     const progressPercent = ((index + 1) / questions.length) * 100;
                     progressBar.style.width = `${progressPercent}%`;
-                    progressText.textContent = `Question ${index + 1} sur ${questions.length}`;
+                    progressText.textContent = `Question ${index + 1} of ${questions.length}`;
                     
                     if (index === questions.length - 1) {
                         nextBtn.style.display = 'none';
@@ -1145,13 +1154,13 @@
                     }
                 }
 
-                // Gestion du bouton Next
+                // Next button handler
                 nextBtn.onclick = function() {
                     const currentQuestion = questions[currentQuestionIndex];
                     const selectedOption = currentQuestion.querySelector('input[type="radio"]:checked');
                     
                     if (!selectedOption) {
-                        alert('Veuillez sélectionner une réponse avant de continuer.');
+                        alert('Please select an answer before continuing.');
                         return;
                     }
                     
@@ -1159,29 +1168,29 @@
                     showQuestion(currentQuestionIndex);
                 };
 
-                // Gestion de la soumission
+                // Form submission handler
                 form.onsubmit = async function(e) {
                     e.preventDefault();
                     
                     if (!userInfo.fullName) {
-                        alert('Veuillez entrer votre nom complet');
+                        alert('Please enter your full name');
                         return;
                     }
                     
-                    // Vérifier l'unicité du nom pour ce test
+                    // Check name uniqueness for this test
                     if (!(await isNameUniqueForTest(userInfo.fullName, testType))) {
-                        alert(`Ce nom a déjà été utilisé pour passer le test ${testType}. Une seule tentative est autorisée par test.`);
+                        alert(`This name has already been used to take the ${testType} test. Only one attempt is allowed per test.`);
                         return;
                     }
                     
                     calculateScore(testType);
                 };
 
-                // Afficher la première question
+                // Show first question
                 showQuestion(currentQuestionIndex);
             }
 
-            // Calcul du score
+            // Calculate score
             async function calculateScore(testType) {
                 const inputs = document.querySelectorAll(`#${testType}Form input[type="radio"]:checked`);
                 let score = 0;
@@ -1193,7 +1202,7 @@
                     
                     if ((testType === 'eq' && index === 5) || (testType === 'anxiety' && index === 5)) {
                         questionValue = 6 - questionValue;
-                        scoreDetails.push(`Q${index+1}: ${originalValue} → ${questionValue} pts (inversé)`);
+                        scoreDetails.push(`Q${index+1}: ${originalValue} → ${questionValue} pts (reversed)`);
                     } else {
                         scoreDetails.push(`Q${index+1}: ${questionValue} pts`);
                     }
@@ -1205,83 +1214,83 @@
                 
                 if (testType === 'eq') {
                     if (score >= 25) {
-                        level = "QE Élevé";
-                        message = "Excellente Intelligence Émotionnelle";
-                        details = "Vous démontrez des compétences avancées de conscience et de gestion émotionnelle qui profitent à vos relations personnelles et professionnelles.";
+                        level = "High EQ";
+                        message = "Excellent Emotional Intelligence";
+                        details = "You demonstrate advanced emotional awareness and management skills that benefit your personal and professional relationships.";
                         advice = `
                             <ul>
-                                <li>Continuez à pratiquer la pleine conscience et l'auto-réflexion</li>
-                                <li>Guidez les autres en intelligence émotionnelle</li>
-                                <li>Explorez des opportunités de leadership</li>
-                                <li>Envisagez une formation avancée en QE</li>
+                                <li>Continue practicing mindfulness and self-reflection</li>
+                                <li>Guide others in emotional intelligence</li>
+                                <li>Explore leadership opportunities</li>
+                                <li>Consider advanced EQ training</li>
                             </ul>
                         `;
                     } else if (score >= 16) {
-                        level = "QE Modéré";
-                        message = "Bonne Intelligence Émotionnelle";
-                        details = "Vous avez de solides compétences émotionnelles avec une marge de progression dans certains domaines qui peuvent être améliorés avec de la pratique.";
+                        level = "Moderate EQ";
+                        message = "Good Emotional Intelligence";
+                        details = "You have solid emotional skills with room for growth in certain areas that can be improved with practice.";
                         advice = `
                             <ul>
-                                <li>Pratiquez l'identification des émotions dans différentes situations</li>
-                                <li>Travaillez sur la pause avant de réagir émotionnellement</li>
-                                <li>Lisez des livres sur l'intelligence émotionnelle</li>
-                                <li>Demandez des retours sur vos réponses émotionnelles</li>
+                                <li>Practice identifying emotions in different situations</li>
+                                <li>Work on pausing before emotional reactions</li>
+                                <li>Read books on emotional intelligence</li>
+                                <li>Ask for feedback on your emotional responses</li>
                             </ul>
                         `;
                     } else {
-                        level = "QE en Développement";
-                        message = "Intelligence Émotionnelle de Base";
-                        details = "Vous développez des compétences de conscience émotionnelle qui peuvent être renforcées par une pratique ciblée et un apprentissage continu.";
+                        level = "Developing EQ";
+                        message = "Basic Emotional Intelligence";
+                        details = "You're developing emotional awareness skills that can be strengthened through targeted practice and continued learning.";
                         advice = `
                             <ul>
-                                <li>Commencez un journal des émotions</li>
-                                <li>Apprenez un vocabulaire émotionnel de base</li>
-                                <li>Pratiquez des exercices de respiration profonde</li>
-                                <li>Envisagez des ateliers ou un conseil en QE</li>
+                                <li>Start an emotion journal</li>
+                                <li>Learn basic emotional vocabulary</li>
+                                <li>Practice deep breathing exercises</li>
+                                <li>Consider EQ workshops or counseling</li>
                             </ul>
                         `;
                     }
                 } else {
                     if (score >= 20) {
-                        level = "Anxiété Élevée";
-                        message = "Niveau d'Anxiété Significatif";
-                        details = "Vos réponses indiquent un niveau élevé d'anxiété qui pourrait bénéficier d'un soutien professionnel.";
+                        level = "High Anxiety";
+                        message = "Significant Anxiety Level";
+                        details = "Your responses indicate a high level of anxiety that could benefit from professional support.";
                         advice = `
                             <ul>
-                                <li>Consultez un professionnel de la santé mentale</li>
-                                <li>Pratiquez des techniques de relaxation quotidiennes</li>
-                                <li>Établissez une routine de sommeil régulière</li>
-                                <li>Limitez la consommation de caféine et d'alcool</li>
+                                <li>Consult a mental health professional</li>
+                                <li>Practice daily relaxation techniques</li>
+                                <li>Establish a regular sleep routine</li>
+                                <li>Limit caffeine and alcohol consumption</li>
                             </ul>
                         `;
                     } else if (score >= 10) {
-                        level = "Anxiété Modérée";
-                        message = "Présence d'Anxiété";
-                        details = "Vous ressentez une anxiété modérée qui pourrait être gérée avec des techniques de soins personnels et de réduction du stress.";
+                        level = "Moderate Anxiety";
+                        message = "Presence of Anxiety";
+                        details = "You experience moderate anxiety that could be managed with self-care and stress reduction techniques.";
                         advice = `
                             <ul>
-                                <li>Pratiquez une activité physique régulière</li>
-                                <li>Essayez la méditation de pleine conscience</li>
-                                <li>Tenez un journal des inquiétudes</li>
-                                <li>Apprenez des techniques de gestion du temps</li>
+                                <li>Practice regular physical activity</li>
+                                <li>Try mindfulness meditation</li>
+                                <li>Keep a worry journal</li>
+                                <li>Learn time management techniques</li>
                             </ul>
                         `;
                     } else {
-                        level = "Faible Anxiété";
-                        message = "Anxiété Minimale";
-                        details = "Vos réponses indiquent généralement de faibles niveaux d'anxiété et de bonnes compétences en gestion du stress.";
+                        level = "Low Anxiety";
+                        message = "Minimal Anxiety";
+                        details = "Your responses generally indicate low anxiety levels and good stress management skills.";
                         advice = `
                             <ul>
-                                <li>Maintenez vos routines saines</li>
-                                <li>Continuez les pratiques de prévention du stress</li>
-                                <li>Soyez attentif aux premiers signes de stress</li>
-                                <li>Aidez les autres à gérer leur anxiété</li>
+                                <li>Maintain your healthy routines</li>
+                                <li>Continue stress prevention practices</li>
+                                <li>Be mindful of early stress signs</li>
+                                <li>Help others manage their anxiety</li>
                             </ul>
                         `;
                     }
                 }
 
-                // Sauvegarder le résultat
+                // Save result
                 const testResult = {
                     fullName: userInfo.fullName,
                     gender: userInfo.gender,
@@ -1295,13 +1304,13 @@
                 try {
                     await db.collection("testResults").add(testResult);
                     
-                    // Marquer ce test spécifique comme complété
+                    // Mark this specific test as completed
                     markTestAsTaken(testType);
                     disableTestInterface(testType);
                     
                     showResults(testType, level, message, details, advice, scoreDetails);
                 } catch (error) {
-                    console.error("Erreur de sauvegarde dans Firestore:", error);
+                    console.error("Error saving to Firestore:", error);
                     // Fallback to localStorage
                     let allResults = JSON.parse(localStorage.getItem('testResults')) || [];
                     allResults.push(testResult);
@@ -1312,7 +1321,7 @@
                 }
             }
 
-            // Afficher les résultats
+            // Show results
             function showResults(testType, level, message, details, advice, scoreDetails) {
                 const testContainer = document.getElementById(`${testType}Test`);
                 const resultContainer = document.getElementById(`${testType}Result`);
@@ -1329,7 +1338,7 @@
                 detailsElement.textContent = details;
                 adviceElement.innerHTML = advice;
                 
-                // Passer automatiquement à l'autre test si disponible
+                // Automatically switch to other test if available
                 if (testType === 'eq' && !hasUserTakenTest('anxiety')) {
                     setTimeout(() => {
                         switchTest('anxiety');
@@ -1341,10 +1350,10 @@
                 }
             }
 
-            // Charger les résultats
+            // Load results
             async function loadResults() {
                 const resultsList = document.getElementById('resultsList');
-                resultsList.innerHTML = '<p>Chargement des résultats...</p>';
+                resultsList.innerHTML = '<p>Loading results...</p>';
 
                 try {
                     const snapshot = await db.collection("testResults")
@@ -1353,7 +1362,7 @@
                                           .get();
                     
                     if (snapshot.empty) {
-                        resultsList.innerHTML = '<p>Aucun résultat de test pour le moment.</p>';
+                        resultsList.innerHTML = '<p>No test results yet.</p>';
                         return;
                     }
                     
@@ -1363,10 +1372,10 @@
                         const resultDiv = document.createElement('div');
                         resultDiv.className = 'test-result';
                         resultDiv.innerHTML = `
-                            <p><strong>Nom:</strong> ${result.fullName}</p>
-                            <p><strong>Genre:</strong> ${result.gender}</p>
+                            <p><strong>Name:</strong> ${result.fullName}</p>
+                            <p><strong>Gender:</strong> ${result.gender}</p>
                             <p><strong>Test:</strong> ${result.testType.toUpperCase()}</p>
-                            <p><strong>Résultat:</strong> ${result.level}</p>
+                            <p><strong>Result:</strong> ${result.level}</p>
                             <p><strong>Score:</strong> ${result.score}</p>
                             <p><strong>Date:</strong> ${new Date(result.date).toLocaleString()}</p>
                             <hr>
@@ -1374,21 +1383,21 @@
                         resultsList.appendChild(resultDiv);
                     });
                 } catch (error) {
-                    console.error("Erreur de chargement des résultats:", error);
-                    resultsList.innerHTML = '<p>Erreur de chargement des résultats. Veuillez réessayer.</p>';
+                    console.error("Error loading results:", error);
+                    resultsList.innerHTML = '<p>Error loading results. Please try again.</p>';
                 }
             }
 
-            // Exporter en CSV
+            // Export to CSV
             async function exportToCSV() {
                 try {
                     const snapshot = await db.collection("testResults").get();
                     if (snapshot.empty) {
-                        alert('Aucun résultat à exporter');
+                        alert('No results to export');
                         return;
                     }
                     
-                    let csv = 'Type de Test,Nom Complet,Genre,Résultat,Score,Date\n';
+                    let csv = 'Test Type,Full Name,Gender,Result,Score,Date\n';
                     snapshot.forEach(doc => {
                         const result = doc.data();
                         csv += `${result.testType},"${result.fullName || ''}","${result.gender || ''}","${result.level}",${result.score},${result.date}\n`;
@@ -1399,17 +1408,17 @@
                     const a = document.createElement('a');
                     a.setAttribute('hidden', '');
                     a.setAttribute('href', url);
-                    a.setAttribute('download', 'resultats_tests_psychologiques.csv');
+                    a.setAttribute('download', 'psychological_test_results.csv');
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
                 } catch (error) {
-                    console.error("Échec de l'export:", error);
-                    alert('Échec de l\'export. Veuillez réessayer.');
+                    console.error("Export failed:", error);
+                    alert('Export failed. Please try again.');
                 }
             }
 
-            // Synchronisation
+            // Sync results
             function syncResultsWithAdmin() {
                 if (adminResults.style.display === 'block') {
                     syncNotification.style.display = 'block';
@@ -1442,7 +1451,7 @@
                 startAutoSync();
             }
 
-            // Changer de test
+            // Switch between tests
             function switchTest(activeTest) {
                 if (hasUserTakenTest(activeTest)) {
                     return;
@@ -1466,20 +1475,28 @@
                 }
             }
 
-            // Écouteurs d'événements
+            // Event listeners
             eqBtn.addEventListener('click', () => {
+                if (!userInfo.fullName) {
+                    alert('Please first enter your full name');
+                    return;
+                }
                 if (!hasUserTakenTest('eq')) {
                     switchTest('eq');
                 }
             });
             
             anxietyBtn.addEventListener('click', () => {
+                if (!userInfo.fullName) {
+                    alert('Please first enter your full name');
+                    return;
+                }
                 if (!hasUserTakenTest('anxiety')) {
                     switchTest('anxiety');
                 }
             });
 
-            // Vérifier au chargement si tests déjà passés
+            // Check on load if tests were already taken
             if (hasUserTakenTest('eq')) {
                 disableTestInterface('eq');
             }
@@ -1488,7 +1505,7 @@
                 disableTestInterface('anxiety');
             }
 
-            // Initialisation - afficher le premier test disponible
+            // Initialization - show first available test
             if (!hasUserTakenTest('eq')) {
                 switchTest('eq');
             } else if (!hasUserTakenTest('anxiety')) {
