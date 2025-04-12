@@ -81,6 +81,13 @@
             transform: translateY(-2px);
         }
 
+        .test-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #e0e0e0;
+            border-color: #b0b0b0;
+        }
+
         .test-container {
             padding: 30px;
             display: none;
@@ -591,6 +598,15 @@
             color: white;
         }
 
+        .test-completed-notice {
+            background-color: #e8f5e9;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            text-align: center;
+            border-left: 4px solid var(--success);
+        }
+
         @media (max-width: 1000px) {
             .admin-results {
                 width: 95%;
@@ -754,398 +770,413 @@
 
         <!-- Email Field -->
         <div class="email-field" id="emailContainer">
-            <label for="userEmail">Your email (optional):</label>
-            <input type="email" id="userEmail" placeholder="email@example.com">
+            <label for="userEmail">Your email (required):</label>
+            <input type="email" id="userEmail" placeholder="email@example.com" required>
         </div>
 
         <!-- Emotional Intelligence Test (6 questions) -->
         <div class="test-container active" id="eqTest">
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress" id="eqProgress"></div>
-                </div>
-                <div id="eqProgressText">Question 1 of 6</div>
+            <div id="eqTestCompletedNotice" class="test-completed-notice" style="display: none;">
+                <h3>You have already completed the EQ Test</h3>
+                <p>Each user can only take this test once.</p>
             </div>
-
-            <form id="eqForm">
-                <div class="question active" id="eqQuestion1">
-                    <div class="question-text">1. I can recognize my emotions as I experience them</div>
-                    <div class="rating-scale">
-                        <span>Strongly disagree</span>
-                        <span>Strongly agree</span>
+            
+            <div id="eqTestContent">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress" id="eqProgress"></div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="eq1-1" name="eq1" value="1">
-                            <label for="eq1-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq1-2" name="eq1" value="2">
-                            <label for="eq1-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq1-3" name="eq1" value="3">
-                            <label for="eq1-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq1-4" name="eq1" value="4">
-                            <label for="eq1-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq1-5" name="eq1" value="5">
-                            <label for="eq1-5">5</label>
-                        </div>
-                    </div>
+                    <div id="eqProgressText">Question 1 of 6</div>
                 </div>
 
-                <div class="question" id="eqQuestion2">
-                    <div class="question-text">2. I find it hard to understand the nonverbal messages of other people</div>
-                    <div class="rating-scale">
-                        <span>Strongly disagree</span>
-                        <span>Strongly agree</span>
+                <form id="eqForm">
+                    <!-- Questions EQ -->
+                    <div class="question active" id="eqQuestion1">
+                        <div class="question-text">1. I can recognize my emotions as I experience them</div>
+                        <div class="rating-scale">
+                            <span>Strongly disagree</span>
+                            <span>Strongly agree</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="eq1-1" name="eq1" value="1">
+                                <label for="eq1-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq1-2" name="eq1" value="2">
+                                <label for="eq1-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq1-3" name="eq1" value="3">
+                                <label for="eq1-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq1-4" name="eq1" value="4">
+                                <label for="eq1-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq1-5" name="eq1" value="5">
+                                <label for="eq1-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="eq2-1" name="eq2" value="1">
-                            <label for="eq2-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq2-2" name="eq2" value="2">
-                            <label for="eq2-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq2-3" name="eq2" value="3">
-                            <label for="eq2-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq2-4" name="eq2" value="4">
-                            <label for="eq2-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq2-5" name="eq2" value="5">
-                            <label for="eq2-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="question" id="eqQuestion3">
-                    <div class="question-text">3. I have control over my emotions</div>
-                    <div class="rating-scale">
-                        <span>Strongly disagree</span>
-                        <span>Strongly agree</span>
+                    <div class="question" id="eqQuestion2">
+                        <div class="question-text">2. I find it hard to understand the nonverbal messages of other people</div>
+                        <div class="rating-scale">
+                            <span>Strongly disagree</span>
+                            <span>Strongly agree</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="eq2-1" name="eq2" value="1">
+                                <label for="eq2-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq2-2" name="eq2" value="2">
+                                <label for="eq2-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq2-3" name="eq2" value="3">
+                                <label for="eq2-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq2-4" name="eq2" value="4">
+                                <label for="eq2-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq2-5" name="eq2" value="5">
+                                <label for="eq2-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="eq3-1" name="eq3" value="1">
-                            <label for="eq3-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq3-2" name="eq3" value="2">
-                            <label for="eq3-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq3-3" name="eq3" value="3">
-                            <label for="eq3-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq3-4" name="eq3" value="4">
-                            <label for="eq3-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq3-5" name="eq3" value="5">
-                            <label for="eq3-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="question" id="eqQuestion4">
-                    <div class="question-text">4. I have difficulty understanding why people feel the way they do</div>
-                    <div class="rating-scale">
-                        <span>Strongly disagree</span>
-                        <span>Strongly agree</span>
+                    <div class="question" id="eqQuestion3">
+                        <div class="question-text">3. I have control over my emotions</div>
+                        <div class="rating-scale">
+                            <span>Strongly disagree</span>
+                            <span>Strongly agree</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="eq3-1" name="eq3" value="1">
+                                <label for="eq3-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq3-2" name="eq3" value="2">
+                                <label for="eq3-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq3-3" name="eq3" value="3">
+                                <label for="eq3-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq3-4" name="eq3" value="4">
+                                <label for="eq3-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq3-5" name="eq3" value="5">
+                                <label for="eq3-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="eq4-1" name="eq4" value="1">
-                            <label for="eq4-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq4-2" name="eq4" value="2">
-                            <label for="eq4-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq4-3" name="eq4" value="3">
-                            <label for="eq4-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq4-4" name="eq4" value="4">
-                            <label for="eq4-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq4-5" name="eq4" value="5">
-                            <label for="eq4-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="question" id="eqQuestion5">
-                    <div class="question-text">5. I'm good at "reading" people</div>
-                    <div class="rating-scale">
-                        <span>Strongly disagree</span>
-                        <span>Strongly agree</span>
+                    <div class="question" id="eqQuestion4">
+                        <div class="question-text">4. I have difficulty understanding why people feel the way they do</div>
+                        <div class="rating-scale">
+                            <span>Strongly disagree</span>
+                            <span>Strongly agree</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="eq4-1" name="eq4" value="1">
+                                <label for="eq4-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq4-2" name="eq4" value="2">
+                                <label for="eq4-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq4-3" name="eq4" value="3">
+                                <label for="eq4-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq4-4" name="eq4" value="4">
+                                <label for="eq4-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq4-5" name="eq4" value="5">
+                                <label for="eq4-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="eq5-1" name="eq5" value="1">
-                            <label for="eq5-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq5-2" name="eq5" value="2">
-                            <label for="eq5-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq5-3" name="eq5" value="3">
-                            <label for="eq5-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq5-4" name="eq5" value="4">
-                            <label for="eq5-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq5-5" name="eq5" value="5">
-                            <label for="eq5-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="question" id="eqQuestion6">
-                    <div class="question-text">6. I often act impulsively when I'm upset</div>
-                    <div class="rating-scale">
-                        <span>Strongly disagree</span>
-                        <span>Strongly agree</span>
+                    <div class="question" id="eqQuestion5">
+                        <div class="question-text">5. I'm good at "reading" people</div>
+                        <div class="rating-scale">
+                            <span>Strongly disagree</span>
+                            <span>Strongly agree</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="eq5-1" name="eq5" value="1">
+                                <label for="eq5-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq5-2" name="eq5" value="2">
+                                <label for="eq5-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq5-3" name="eq5" value="3">
+                                <label for="eq5-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq5-4" name="eq5" value="4">
+                                <label for="eq5-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq5-5" name="eq5" value="5">
+                                <label for="eq5-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="eq6-1" name="eq6" value="1">
-                            <label for="eq6-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq6-2" name="eq6" value="2">
-                            <label for="eq6-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq6-3" name="eq6" value="3">
-                            <label for="eq6-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq6-4" name="eq6" value="4">
-                            <label for="eq6-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="eq6-5" name="eq6" value="5">
-                            <label for="eq6-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <button type="submit" class="btn" id="eqSubmitBtn">Submit Test</button>
-                <button type="button" class="btn" id="eqNextBtn" style="display: none;">Next Question</button>
-            </form>
+                    <div class="question" id="eqQuestion6">
+                        <div class="question-text">6. I often act impulsively when I'm upset</div>
+                        <div class="rating-scale">
+                            <span>Strongly disagree</span>
+                            <span>Strongly agree</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="eq6-1" name="eq6" value="1">
+                                <label for="eq6-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq6-2" name="eq6" value="2">
+                                <label for="eq6-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq6-3" name="eq6" value="3">
+                                <label for="eq6-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq6-4" name="eq6" value="4">
+                                <label for="eq6-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="eq6-5" name="eq6" value="5">
+                                <label for="eq6-5">5</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn" id="eqSubmitBtn">Submit Test</button>
+                    <button type="button" class="btn" id="eqNextBtn" style="display: none;">Next Question</button>
+                </form>
+            </div>
         </div>
 
         <!-- Anxiety Test (6 questions) -->
         <div class="test-container" id="anxietyTest">
-            <div class="progress-container">
-                <div class="progress-bar">
-                    <div class="progress" id="anxietyProgress"></div>
-                </div>
-                <div id="anxietyProgressText">Question 1 of 6</div>
+            <div id="anxietyTestCompletedNotice" class="test-completed-notice" style="display: none;">
+                <h3>You have already completed the Anxiety Test</h3>
+                <p>Each user can only take this test once.</p>
             </div>
-
-            <form id="anxietyForm">
-                <div class="question active" id="anxietyQuestion1">
-                    <div class="question-text">1. I feel tense or wound up</div>
-                    <div class="rating-scale">
-                        <span>Not at all</span>
-                        <span>Very much</span>
+            
+            <div id="anxietyTestContent">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress" id="anxietyProgress"></div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety1-1" name="anxiety1" value="1">
-                            <label for="anxiety1-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety1-2" name="anxiety1" value="2">
-                            <label for="anxiety1-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety1-3" name="anxiety1" value="3">
-                            <label for="anxiety1-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety1-4" name="anxiety1" value="4">
-                            <label for="anxiety1-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety1-5" name="anxiety1" value="5">
-                            <label for="anxiety1-5">5</label>
-                        </div>
-                    </div>
+                    <div id="anxietyProgressText">Question 1 of 6</div>
                 </div>
 
-                <div class="question" id="anxietyQuestion2">
-                    <div class="question-text">2. I feel like I'm slowed down</div>
-                    <div class="rating-scale">
-                        <span>Not at all</span>
-                        <span>Very much</span>
+                <form id="anxietyForm">
+                    <div class="question active" id="anxietyQuestion1">
+                        <div class="question-text">1. I feel tense or wound up</div>
+                        <div class="rating-scale">
+                            <span>Not at all</span>
+                            <span>Very much</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety1-1" name="anxiety1" value="1">
+                                <label for="anxiety1-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety1-2" name="anxiety1" value="2">
+                                <label for="anxiety1-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety1-3" name="anxiety1" value="3">
+                                <label for="anxiety1-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety1-4" name="anxiety1" value="4">
+                                <label for="anxiety1-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety1-5" name="anxiety1" value="5">
+                                <label for="anxiety1-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety2-1" name="anxiety2" value="1">
-                            <label for="anxiety2-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety2-2" name="anxiety2" value="2">
-                            <label for="anxiety2-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety2-3" name="anxiety2" value="3">
-                            <label for="anxiety2-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety2-4" name="anxiety2" value="4">
-                            <label for="anxiety2-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety2-5" name="anxiety2" value="5">
-                            <label for="anxiety2-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="question" id="anxietyQuestion3">
-                    <div class="question-text">3. I still enjoy the things I used to enjoy</div>
-                    <div class="rating-scale">
-                        <span>Definitely as much</span>
-                        <span>Hardly at all</span>
+                    <div class="question" id="anxietyQuestion2">
+                        <div class="question-text">2. I feel like I'm slowed down</div>
+                        <div class="rating-scale">
+                            <span>Not at all</span>
+                            <span>Very much</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety2-1" name="anxiety2" value="1">
+                                <label for="anxiety2-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety2-2" name="anxiety2" value="2">
+                                <label for="anxiety2-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety2-3" name="anxiety2" value="3">
+                                <label for="anxiety2-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety2-4" name="anxiety2" value="4">
+                                <label for="anxiety2-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety2-5" name="anxiety2" value="5">
+                                <label for="anxiety2-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety3-1" name="anxiety3" value="1">
-                            <label for="anxiety3-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety3-2" name="anxiety3" value="2">
-                            <label for="anxiety3-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety3-3" name="anxiety3" value="3">
-                            <label for="anxiety3-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety3-4" name="anxiety3" value="4">
-                            <label for="anxiety3-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety3-5" name="anxiety3" value="5">
-                            <label for="anxiety3-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="question" id="anxietyQuestion4">
-                    <div class="question-text">4. I get sudden feelings of panic</div>
-                    <div class="rating-scale">
-                        <span>Not at all</span>
-                        <span>Very often</span>
+                    <div class="question" id="anxietyQuestion3">
+                        <div class="question-text">3. I still enjoy the things I used to enjoy</div>
+                        <div class="rating-scale">
+                            <span>Definitely as much</span>
+                            <span>Hardly at all</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety3-1" name="anxiety3" value="1">
+                                <label for="anxiety3-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety3-2" name="anxiety3" value="2">
+                                <label for="anxiety3-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety3-3" name="anxiety3" value="3">
+                                <label for="anxiety3-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety3-4" name="anxiety3" value="4">
+                                <label for="anxiety3-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety3-5" name="anxiety3" value="5">
+                                <label for="anxiety3-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety4-1" name="anxiety4" value="1">
-                            <label for="anxiety4-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety4-2" name="anxiety4" value="2">
-                            <label for="anxiety4-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety4-3" name="anxiety4" value="3">
-                            <label for="anxiety4-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety4-4" name="anxiety4" value="4">
-                            <label for="anxiety4-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety4-5" name="anxiety4" value="5">
-                            <label for="anxiety4-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="question" id="anxietyQuestion5">
-                    <div class="question-text">5. I can sit at ease and feel relaxed</div>
-                    <div class="rating-scale">
-                        <span>Definitely</span>
-                        <span>Not at all</span>
+                    <div class="question" id="anxietyQuestion4">
+                        <div class="question-text">4. I get sudden feelings of panic</div>
+                        <div class="rating-scale">
+                            <span>Not at all</span>
+                            <span>Very often</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety4-1" name="anxiety4" value="1">
+                                <label for="anxiety4-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety4-2" name="anxiety4" value="2">
+                                <label for="anxiety4-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety4-3" name="anxiety4" value="3">
+                                <label for="anxiety4-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety4-4" name="anxiety4" value="4">
+                                <label for="anxiety4-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety4-5" name="anxiety4" value="5">
+                                <label for="anxiety4-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety5-1" name="anxiety5" value="1">
-                            <label for="anxiety5-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety5-2" name="anxiety5" value="2">
-                            <label for="anxiety5-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety5-3" name="anxiety5" value="3">
-                            <label for="anxiety5-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety5-4" name="anxiety5" value="4">
-                            <label for="anxiety5-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety5-5" name="anxiety5" value="5">
-                            <label for="anxiety5-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="question" id="anxietyQuestion6">
-                    <div class="question-text">6. I feel restless and have to be on the move</div>
-                    <div class="rating-scale">
-                        <span>Not at all</span>
-                        <span>Very much</span>
+                    <div class="question" id="anxietyQuestion5">
+                        <div class="question-text">5. I can sit at ease and feel relaxed</div>
+                        <div class="rating-scale">
+                            <span>Definitely</span>
+                            <span>Not at all</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety5-1" name="anxiety5" value="1">
+                                <label for="anxiety5-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety5-2" name="anxiety5" value="2">
+                                <label for="anxiety5-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety5-3" name="anxiety5" value="3">
+                                <label for="anxiety5-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety5-4" name="anxiety5" value="4">
+                                <label for="anxiety5-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety5-5" name="anxiety5" value="5">
+                                <label for="anxiety5-5">5</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="radio-options">
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety6-1" name="anxiety6" value="1">
-                            <label for="anxiety6-1">1</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety6-2" name="anxiety6" value="2">
-                            <label for="anxiety6-2">2</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety6-3" name="anxiety6" value="3">
-                            <label for="anxiety6-3">3</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety6-4" name="anxiety6" value="4">
-                            <label for="anxiety6-4">4</label>
-                        </div>
-                        <div class="radio-option">
-                            <input type="radio" id="anxiety6-5" name="anxiety6" value="5">
-                            <label for="anxiety6-5">5</label>
-                        </div>
-                    </div>
-                </div>
 
-                <button type="submit" class="btn" id="anxietySubmitBtn">Submit Test</button>
-                <button type="button" class="btn" id="anxietyNextBtn" style="display: none;">Next Question</button>
-            </form>
+                    <div class="question" id="anxietyQuestion6">
+                        <div class="question-text">6. I feel restless and have to be on the move</div>
+                        <div class="rating-scale">
+                            <span>Not at all</span>
+                            <span>Very much</span>
+                        </div>
+                        <div class="radio-options">
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety6-1" name="anxiety6" value="1">
+                                <label for="anxiety6-1">1</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety6-2" name="anxiety6" value="2">
+                                <label for="anxiety6-2">2</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety6-3" name="anxiety6" value="3">
+                                <label for="anxiety6-3">3</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety6-4" name="anxiety6" value="4">
+                                <label for="anxiety6-4">4</label>
+                            </div>
+                            <div class="radio-option">
+                                <input type="radio" id="anxiety6-5" name="anxiety6" value="5">
+                                <label for="anxiety6-5">5</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn" id="anxietySubmitBtn">Submit Test</button>
+                    <button type="button" class="btn" id="anxietyNextBtn" style="display: none;">Next Question</button>
+                </form>
+            </div>
         </div>
 
         <!-- EQ Results -->
@@ -1166,7 +1197,6 @@
                     <div id="eqAdvice"></div>
                 </div>
             </div>
-            <button class="btn restart-btn" id="eqRestartBtn">Retake Test</button>
         </div>
 
         <!-- Anxiety Results -->
@@ -1187,7 +1217,6 @@
                     <div id="anxietyAdvice"></div>
                 </div>
             </div>
-            <button class="btn restart-btn" id="anxietyRestartBtn">Retake Test</button>
         </div>
 
         <footer>
@@ -1231,11 +1260,10 @@
             const anxietyBtn = document.getElementById('anxietyBtn');
             const eqTest = document.getElementById('eqTest');
             const anxietyTest = document.getElementById('anxietyTest');
-            const eqRestartBtn = document.getElementById('eqRestartBtn');
-            const anxietyRestartBtn = document.getElementById('anxietyRestartBtn');
             const firstNameInput = document.getElementById('firstName');
             const lastNameInput = document.getElementById('lastName');
             const genderInput = document.getElementById('gender');
+            const userEmailInput = document.getElementById('userEmail');
             const userSearch = document.getElementById('userSearch');
             const testTypeFilter = document.getElementById('testTypeFilter');
             const dateFilter = document.getElementById('dateFilter');
@@ -1249,11 +1277,69 @@
             const confirmationDialog = document.getElementById('confirmationDialog');
             const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
             const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+            const eqTestCompletedNotice = document.getElementById('eqTestCompletedNotice');
+            const anxietyTestCompletedNotice = document.getElementById('anxietyTestCompletedNotice');
+            const eqTestContent = document.getElementById('eqTestContent');
+            const anxietyTestContent = document.getElementById('anxietyTestContent');
             
             const ADMIN_PASSWORD = "admin123";
             
+            // Variables d'état
+            let userHasTakenEQTest = false;
+            let userHasTakenAnxietyTest = false;
+            
             // Afficher le panneau admin
             document.querySelector('.admin-panel').style.display = 'block';
+            
+            // Vérifier si l'utilisateur a déjà passé les tests
+            async function checkUserTests() {
+                const email = userEmailInput.value;
+                if (!email) return;
+                
+                try {
+                    const eqQuery = await db.collection("testResults")
+                        .where("email", "==", email)
+                        .where("testType", "==", "eq")
+                        .limit(1)
+                        .get();
+                    
+                    const anxietyQuery = await db.collection("testResults")
+                        .where("email", "==", email)
+                        .where("testType", "==", "anxiety")
+                        .limit(1)
+                        .get();
+                    
+                    userHasTakenEQTest = !eqQuery.empty;
+                    userHasTakenAnxietyTest = !anxietyQuery.empty;
+                    
+                    updateTestButtons();
+                } catch (error) {
+                    console.error("Error checking user tests:", error);
+                }
+            }
+            
+            // Mettre à jour l'état des boutons de test
+            function updateTestButtons() {
+                if (userHasTakenEQTest) {
+                    eqBtn.classList.add('disabled');
+                    eqTestCompletedNotice.style.display = 'block';
+                    eqTestContent.style.display = 'none';
+                } else {
+                    eqBtn.classList.remove('disabled');
+                    eqTestCompletedNotice.style.display = 'none';
+                    eqTestContent.style.display = 'block';
+                }
+                
+                if (userHasTakenAnxietyTest) {
+                    anxietyBtn.classList.add('disabled');
+                    anxietyTestCompletedNotice.style.display = 'block';
+                    anxietyTestContent.style.display = 'none';
+                } else {
+                    anxietyBtn.classList.remove('disabled');
+                    anxietyTestCompletedNotice.style.display = 'none';
+                    anxietyTestContent.style.display = 'block';
+                }
+            }
             
             // Initialiser les tests
             function initTest(testType) {
@@ -1299,16 +1385,16 @@
                 };
 
                 // Gestion de la soumission
-                form.onsubmit = function(e) {
+                form.onsubmit = async function(e) {
                     e.preventDefault();
                     
                     // Vérifier les informations personnelles
-                    if (!firstNameInput.value || !lastNameInput.value) {
-                        alert('Please fill in your first name and last name before submitting.');
+                    if (!firstNameInput.value || !lastNameInput.value || !userEmailInput.value) {
+                        alert('Please fill in all required fields before submitting.');
                         return;
                     }
                     
-                    calculateScore(testType);
+                    await calculateScore(testType);
                 };
 
                 // Afficher la première question
@@ -1317,7 +1403,7 @@
 
             // Calcul du score
             async function calculateScore(testType) {
-                const email = document.getElementById('userEmail').value || 'Anonymous';
+                const email = userEmailInput.value;
                 const firstName = firstNameInput.value;
                 const lastName = lastNameInput.value;
                 const gender = genderInput.value || 'Unknown';
@@ -1442,6 +1528,15 @@
                 try {
                     await db.collection("testResults").add(testResult);
                     showResults(testType, level, message, details, advice, scoreDetails);
+                    
+                    // Mettre à jour l'état des tests
+                    if (testType === 'eq') {
+                        userHasTakenEQTest = true;
+                    } else {
+                        userHasTakenAnxietyTest = true;
+                    }
+                    updateTestButtons();
+                    
                     syncResultsWithAdmin();
                 } catch (error) {
                     console.error("Error saving to Firestore:", error);
@@ -1727,29 +1822,14 @@
                 startAutoSync();
             }
 
-            // Réinitialiser les tests
-            function resetTest(testType) {
-                const form = document.getElementById(`${testType}Form`);
-                const testContainer = document.getElementById(`${testType}Test`);
-                const resultContainer = document.getElementById(`${testType}Result`);
-                
-                form.reset();
-                resultContainer.style.display = 'none';
-                testContainer.style.display = 'block';
-                initTest(testType);
-            }
-
-            // Gestion des boutons de réinitialisation
-            eqRestartBtn.addEventListener('click', function() {
-                resetTest('eq');
-            });
-            
-            anxietyRestartBtn.addEventListener('click', function() {
-                resetTest('anxiety');
-            });
-
             // Changer de test
             function switchTest(activeTest) {
+                // Vérifier si l'utilisateur a déjà passé le test
+                if ((activeTest === 'eq' && userHasTakenEQTest) || 
+                    (activeTest === 'anxiety' && userHasTakenAnxietyTest)) {
+                    return;
+                }
+                
                 document.querySelectorAll('.test-container, .result-container').forEach(el => {
                     el.style.display = 'none';
                 });
@@ -1816,15 +1896,32 @@
                 });
             });
             
+            // Vérifier les tests existants lorsque l'email change
+            userEmailInput.addEventListener('change', checkUserTests);
+            
             exportBtn.addEventListener('click', exportToCSV);
             manualSyncBtn.addEventListener('click', syncResultsWithAdmin);
 
             // Écouteurs d'événements pour les tests
-            eqBtn.addEventListener('click', () => switchTest('eq'));
-            anxietyBtn.addEventListener('click', () => switchTest('anxiety'));
+            eqBtn.addEventListener('click', () => {
+                if (!userHasTakenEQTest) {
+                    switchTest('eq');
+                }
+            });
+            
+            anxietyBtn.addEventListener('click', () => {
+                if (!userHasTakenAnxietyTest) {
+                    switchTest('anxiety');
+                }
+            });
 
             // Initialisation
             switchTest('eq');
+            
+            // Vérifier si l'email est déjà rempli (par exemple après rafraîchissement)
+            if (userEmailInput.value) {
+                checkUserTests();
+            }
         });
     </script>
 </body>
