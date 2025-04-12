@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Psychological Tests | EQ & Anxiety</title>
+    <title>Psychological Tests SOUKA | EQ & Anxiety</title>
     <style>
         :root {
             --primary: #5e35b1;
@@ -79,14 +79,6 @@
             background: var(--primary);
             color: white;
             transform: translateY(-2px);
-        }
-
-        .test-btn.disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            background: #e9ecef;
-            border-color: #adb5bd;
-            color: #6c757d;
         }
 
         .test-container {
@@ -343,15 +335,167 @@
             border-radius: 4px;
         }
 
+        /* Nouveaux styles pour l'admin */
         .admin-results {
-            margin-top: 20px;
-            max-height: 400px;
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            z-index: 1001;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
             overflow-y: auto;
         }
 
-        .test-result {
+        .admin-results-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .users-list {
+            flex: 1;
+            max-height: 600px;
+            overflow-y: auto;
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: var(--border-radius);
+        }
+
+        .user-item {
             padding: 10px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 4px solid var(--primary);
+        }
+
+        .user-item:hover {
+            background: var(--light);
+        }
+
+        .user-item.active {
+            border-left-color: var(--accent);
+            background: var(--light);
+        }
+
+        .user-details {
+            flex: 2;
+            padding: 15px;
+            background: white;
+            border-radius: var(--border-radius);
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .user-header {
+            margin-bottom: 15px;
+            padding-bottom: 10px;
             border-bottom: 1px solid #eee;
+        }
+
+        .user-tests {
+            margin-top: 15px;
+        }
+
+        .test-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background: #f9f9f9;
+            border-radius: var(--border-radius);
+        }
+
+        .test-item h4 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .test-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .search-box {
+            margin-bottom: 15px;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .filter-controls select {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 15px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 5px 0;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .personal-info {
+            padding: 20px;
+            background: var(--light);
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .personal-info label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .personal-info input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
         }
 
         .email-field {
@@ -394,12 +538,19 @@
             border-radius: var(--border-radius);
         }
 
-        .already-taken-message {
-            text-align: center;
-            padding: 20px;
-            color: var(--danger);
-            font-weight: bold;
-            font-size: 1.2rem;
+        @media (max-width: 1000px) {
+            .admin-results {
+                width: 95%;
+                max-width: none;
+            }
+            
+            .admin-results-container {
+                flex-direction: column;
+            }
+            
+            .users-list, .user-details {
+                max-height: 300px;
+            }
         }
 
         @media (max-width: 600px) {
@@ -420,6 +571,10 @@
             .radio-option {
                 min-width: 20%;
                 margin-bottom: 10px;
+            }
+            
+            .stats-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -449,16 +604,61 @@
             <div id="loginError" style="color: var(--danger); margin-top: 10px;"></div>
         </div>
 
-        <!-- Admin Results -->
-        <div class="admin-login" id="adminResults" style="display: none;">
-            <h2>Test Results</h2>
+        <!-- Admin Results - Nouvelle version organisée -->
+        <div class="admin-results" id="adminResults">
+            <h2>Test Results Dashboard</h2>
             <button class="btn" id="logoutBtn" style="margin-bottom: 20px;">Logout</button>
-            <div class="admin-results" id="resultsList">
-                <!-- Results will be displayed here -->
+            
+            <div class="stats-container">
+                <div class="stat-card">
+                    <div class="stat-label">Total Users</div>
+                    <div class="stat-value" id="totalUsers">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">EQ Tests</div>
+                    <div class="stat-value" id="eqTests">0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Anxiety Tests</div>
+                    <div class="stat-value" id="anxietyTests">0</div>
+                </div>
             </div>
+            
+            <div class="filter-controls">
+                <select id="testTypeFilter">
+                    <option value="all">All Tests</option>
+                    <option value="eq">EQ Tests</option>
+                    <option value="anxiety">Anxiety Tests</option>
+                </select>
+                <select id="dateFilter">
+                    <option value="all">All Time</option>
+                    <option value="today">Today</option>
+                    <option value="week">This Week</option>
+                    <option value="month">This Month</option>
+                </select>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" id="userSearch" placeholder="Search by name or email...">
+            </div>
+            
+            <div class="admin-results-container">
+                <div class="users-list" id="usersList">
+                    <!-- Liste des utilisateurs -->
+                </div>
+                
+                <div class="user-details" id="userDetails">
+                    <div class="user-header">
+                        <h3>Select a user to view details</h3>
+                    </div>
+                    <div class="user-tests" id="userTests">
+                        <!-- Détails des tests de l'utilisateur sélectionné -->
+                    </div>
+                </div>
+            </div>
+            
             <button class="btn" id="exportBtn" style="margin-top: 20px;">Export as CSV</button>
             
-            <!-- Contrôles de synchronisation -->
             <div class="sync-controls">
                 <button class="btn" id="manualSyncBtn">Sync Now</button>
                 <div style="margin-top: 10px;">
@@ -469,9 +669,16 @@
             </div>
         </div>
 
-        <!-- Message si test déjà passé -->
-        <div class="already-taken-message" id="alreadyTakenMessage" style="display: none;">
-            Vous avez déjà passé ce test. Une seule tentative est autorisée.
+        <!-- Personal Information Section -->
+        <div class="personal-info" id="personalInfoContainer">
+            <label for="firstName">First Name:</label>
+            <input type="text" id="firstName" placeholder="Your first name" required>
+            
+            <label for="lastName">Last Name:</label>
+            <input type="text" id="lastName" placeholder="Your last name" required>
+            
+            <label for="gender">Gender:</label>
+            <input type="text" id="gender" placeholder="Your gender">
         </div>
 
         <div class="test-selector">
@@ -495,174 +702,188 @@
             </div>
 
             <form id="eqForm">
-                <!-- Question 1 -->
-                <div class="question active" id="eqQ1">
-                    <div class="question-text">1. I can easily identify my emotions as I experience them.</div>
+                <div class="question active" id="eqQuestion1">
+                    <div class="question-text">1. I can recognize my emotions as I experience them</div>
                     <div class="rating-scale">
                         <span>Strongly disagree</span>
                         <span>Strongly agree</span>
                     </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="eq1" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq1" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq1" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq1" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq1" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="eq1-1" name="eq1" value="1">
+                            <label for="eq1-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq1-2" name="eq1" value="2">
+                            <label for="eq1-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq1-3" name="eq1" value="3">
+                            <label for="eq1-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq1-4" name="eq1" value="4">
+                            <label for="eq1-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq1-5" name="eq1" value="5">
+                            <label for="eq1-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 2 -->
-                <div class="question" id="eqQ2">
-                    <div class="question-text">2. I understand how my emotions affect my behavior.</div>
+                <div class="question" id="eqQuestion2">
+                    <div class="question-text">2. I find it hard to understand the nonverbal messages of other people</div>
+                    <div class="rating-scale">
+                        <span>Strongly disagree</span>
+                        <span>Strongly agree</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="eq2" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq2" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq2" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq2" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq2" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="eq2-1" name="eq2" value="1">
+                            <label for="eq2-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq2-2" name="eq2" value="2">
+                            <label for="eq2-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq2-3" name="eq2" value="3">
+                            <label for="eq2-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq2-4" name="eq2" value="4">
+                            <label for="eq2-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq2-5" name="eq2" value="5">
+                            <label for="eq2-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 3 -->
-                <div class="question" id="eqQ3">
-                    <div class="question-text">3. I can recognize emotions in other people.</div>
+                <div class="question" id="eqQuestion3">
+                    <div class="question-text">3. I have control over my emotions</div>
+                    <div class="rating-scale">
+                        <span>Strongly disagree</span>
+                        <span>Strongly agree</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="eq3" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq3" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq3" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq3" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq3" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="eq3-1" name="eq3" value="1">
+                            <label for="eq3-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq3-2" name="eq3" value="2">
+                            <label for="eq3-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq3-3" name="eq3" value="3">
+                            <label for="eq3-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq3-4" name="eq3" value="4">
+                            <label for="eq3-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq3-5" name="eq3" value="5">
+                            <label for="eq3-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 4 -->
-                <div class="question" id="eqQ4">
-                    <div class="question-text">4. I manage my emotions appropriately in difficult situations.</div>
+                <div class="question" id="eqQuestion4">
+                    <div class="question-text">4. I have difficulty understanding why people feel the way they do</div>
+                    <div class="rating-scale">
+                        <span>Strongly disagree</span>
+                        <span>Strongly agree</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="eq4" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq4" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq4" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq4" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq4" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="eq4-1" name="eq4" value="1">
+                            <label for="eq4-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq4-2" name="eq4" value="2">
+                            <label for="eq4-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq4-3" name="eq4" value="3">
+                            <label for="eq4-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq4-4" name="eq4" value="4">
+                            <label for="eq4-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq4-5" name="eq4" value="5">
+                            <label for="eq4-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 5 -->
-                <div class="question" id="eqQ5">
-                    <div class="question-text">5. I use emotional understanding to improve my relationships.</div>
+                <div class="question" id="eqQuestion5">
+                    <div class="question-text">5. I'm good at "reading" people</div>
+                    <div class="rating-scale">
+                        <span>Strongly disagree</span>
+                        <span>Strongly agree</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="eq5" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq5" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq5" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq5" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq5" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="eq5-1" name="eq5" value="1">
+                            <label for="eq5-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq5-2" name="eq5" value="2">
+                            <label for="eq5-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq5-3" name="eq5" value="3">
+                            <label for="eq5-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq5-4" name="eq5" value="4">
+                            <label for="eq5-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq5-5" name="eq5" value="5">
+                            <label for="eq5-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 6 (reversed) -->
-                <div class="question" id="eqQ6">
-                    <div class="question-text">6. I often feel overwhelmed by my emotions. (reversed)</div>
+                <div class="question" id="eqQuestion6">
+                    <div class="question-text">6. I often act impulsively when I'm upset</div>
+                    <div class="rating-scale">
+                        <span>Strongly disagree</span>
+                        <span>Strongly agree</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="eq6" value="5" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq6" value="4">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq6" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq6" value="2">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="eq6" value="1">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="eq6-1" name="eq6" value="1">
+                            <label for="eq6-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq6-2" name="eq6" value="2">
+                            <label for="eq6-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq6-3" name="eq6" value="3">
+                            <label for="eq6-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq6-4" name="eq6" value="4">
+                            <label for="eq6-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="eq6-5" name="eq6" value="5">
+                            <label for="eq6-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <button type="button" class="btn" id="eqNextBtn">Next Question</button>
-                <button type="submit" class="btn" id="eqSubmitBtn" style="display: none;">View Results</button>
+                <button type="submit" class="btn" id="eqSubmitBtn">Submit Test</button>
+                <button type="button" class="btn" id="eqNextBtn" style="display: none;">Next Question</button>
             </form>
         </div>
 
@@ -676,174 +897,188 @@
             </div>
 
             <form id="anxietyForm">
-                <!-- Question 1 -->
-                <div class="question active" id="anxietyQ1">
-                    <div class="question-text">1. I feel tense or nervous.</div>
+                <div class="question active" id="anxietyQuestion1">
+                    <div class="question-text">1. I feel tense or wound up</div>
                     <div class="rating-scale">
-                        <span>Never</span>
-                        <span>Always</span>
+                        <span>Not at all</span>
+                        <span>Very much</span>
                     </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="aq1" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq1" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq1" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq1" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq1" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety1-1" name="anxiety1" value="1">
+                            <label for="anxiety1-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety1-2" name="anxiety1" value="2">
+                            <label for="anxiety1-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety1-3" name="anxiety1" value="3">
+                            <label for="anxiety1-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety1-4" name="anxiety1" value="4">
+                            <label for="anxiety1-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety1-5" name="anxiety1" value="5">
+                            <label for="anxiety1-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 2 -->
-                <div class="question" id="anxietyQ2">
-                    <div class="question-text">2. I worry excessively.</div>
+                <div class="question" id="anxietyQuestion2">
+                    <div class="question-text">2. I feel like I'm slowed down</div>
+                    <div class="rating-scale">
+                        <span>Not at all</span>
+                        <span>Very much</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="aq2" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq2" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq2" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq2" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq2" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety2-1" name="anxiety2" value="1">
+                            <label for="anxiety2-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety2-2" name="anxiety2" value="2">
+                            <label for="anxiety2-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety2-3" name="anxiety2" value="3">
+                            <label for="anxiety2-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety2-4" name="anxiety2" value="4">
+                            <label for="anxiety2-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety2-5" name="anxiety2" value="5">
+                            <label for="anxiety2-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 3 -->
-                <div class="question" id="anxietyQ3">
-                    <div class="question-text">3. I have trouble relaxing.</div>
+                <div class="question" id="anxietyQuestion3">
+                    <div class="question-text">3. I still enjoy the things I used to enjoy</div>
+                    <div class="rating-scale">
+                        <span>Definitely as much</span>
+                        <span>Hardly at all</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="aq3" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq3" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq3" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq3" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq3" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety3-1" name="anxiety3" value="1">
+                            <label for="anxiety3-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety3-2" name="anxiety3" value="2">
+                            <label for="anxiety3-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety3-3" name="anxiety3" value="3">
+                            <label for="anxiety3-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety3-4" name="anxiety3" value="4">
+                            <label for="anxiety3-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety3-5" name="anxiety3" value="5">
+                            <label for="anxiety3-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 4 -->
-                <div class="question" id="anxietyQ4">
-                    <div class="question-text">4. I feel afraid without apparent reason.</div>
+                <div class="question" id="anxietyQuestion4">
+                    <div class="question-text">4. I get sudden feelings of panic</div>
+                    <div class="rating-scale">
+                        <span>Not at all</span>
+                        <span>Very often</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="aq4" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq4" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq4" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq4" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq4" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety4-1" name="anxiety4" value="1">
+                            <label for="anxiety4-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety4-2" name="anxiety4" value="2">
+                            <label for="anxiety4-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety4-3" name="anxiety4" value="3">
+                            <label for="anxiety4-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety4-4" name="anxiety4" value="4">
+                            <label for="anxiety4-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety4-5" name="anxiety4" value="5">
+                            <label for="anxiety4-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 5 -->
-                <div class="question" id="anxietyQ5">
-                    <div class="question-text">5. I feel restless or on edge.</div>
+                <div class="question" id="anxietyQuestion5">
+                    <div class="question-text">5. I can sit at ease and feel relaxed</div>
+                    <div class="rating-scale">
+                        <span>Definitely</span>
+                        <span>Not at all</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="aq5" value="1" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq5" value="2">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq5" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq5" value="4">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq5" value="5">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety5-1" name="anxiety5" value="1">
+                            <label for="anxiety5-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety5-2" name="anxiety5" value="2">
+                            <label for="anxiety5-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety5-3" name="anxiety5" value="3">
+                            <label for="anxiety5-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety5-4" name="anxiety5" value="4">
+                            <label for="anxiety5-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety5-5" name="anxiety5" value="5">
+                            <label for="anxiety5-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Question 6 (reversed) -->
-                <div class="question" id="anxietyQ6">
-                    <div class="question-text">6. I feel calm and peaceful. (reversed)</div>
+                <div class="question" id="anxietyQuestion6">
+                    <div class="question-text">6. I feel restless and have to be on the move</div>
+                    <div class="rating-scale">
+                        <span>Not at all</span>
+                        <span>Very much</span>
+                    </div>
                     <div class="radio-options">
-                        <label class="radio-option">
-                            <input type="radio" name="aq6" value="5" required>
-                            1
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq6" value="4">
-                            2
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq6" value="3">
-                            3
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq6" value="2">
-                            4
-                        </label>
-                        <label class="radio-option">
-                            <input type="radio" name="aq6" value="1">
-                            5
-                        </label>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety6-1" name="anxiety6" value="1">
+                            <label for="anxiety6-1">1</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety6-2" name="anxiety6" value="2">
+                            <label for="anxiety6-2">2</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety6-3" name="anxiety6" value="3">
+                            <label for="anxiety6-3">3</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety6-4" name="anxiety6" value="4">
+                            <label for="anxiety6-4">4</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="anxiety6-5" name="anxiety6" value="5">
+                            <label for="anxiety6-5">5</label>
+                        </div>
                     </div>
                 </div>
 
-                <button type="button" class="btn" id="anxietyNextBtn">Next Question</button>
-                <button type="submit" class="btn" id="anxietySubmitBtn" style="display: none;">View Results</button>
+                <button type="submit" class="btn" id="anxietySubmitBtn">Submit Test</button>
+                <button type="button" class="btn" id="anxietyNextBtn" style="display: none;">Next Question</button>
             </form>
         </div>
 
@@ -854,6 +1089,11 @@
             <div class="result-message" id="eqMessage"></div>
             <div class="result-details">
                 <p id="eqDetails"></p>
+                
+                <div class="score-calculation">
+                    <h4>Score Calculation</h4>
+                    <div id="eqScoreDetails" class="score-details"></div>
+                </div>
                 
                 <div class="advice-container">
                     <h3>Personalized Advice</h3>
@@ -870,6 +1110,11 @@
             <div class="result-message" id="anxietyMessage"></div>
             <div class="result-details">
                 <p id="anxietyDetails"></p>
+                
+                <div class="score-calculation">
+                    <h4>Score Calculation</h4>
+                    <div id="anxietyScoreDetails" class="score-details"></div>
+                </div>
                 
                 <div class="advice-container">
                     <h3>Personalized Advice</h3>
@@ -895,7 +1140,7 @@
                 apiKey: "AIzaSyAopnRGVW4PP8qtw3umyv8i0eItqhbj61Q",
                 authDomain: "psychologicaltests-8ed93.firebaseapp.com",
                 projectId: "psychologicaltests-8ed93",
-                storageBucket: "psychologicaltests-8ed93.firebasestorage.app",
+                storageBucket: "psychologicaltests-8ed93.appspot.com",
                 messagingSenderId: "446430873510",
                 appId: "1:446430873510:web:29eda97177a2eb5f54f167"
             };
@@ -922,81 +1167,26 @@
             const anxietyTest = document.getElementById('anxietyTest');
             const eqRestartBtn = document.getElementById('eqRestartBtn');
             const anxietyRestartBtn = document.getElementById('anxietyRestartBtn');
-            const alreadyTakenMessage = document.getElementById('alreadyTakenMessage');
-            const emailContainer = document.getElementById('emailContainer');
+            const firstNameInput = document.getElementById('firstName');
+            const lastNameInput = document.getElementById('lastName');
+            const genderInput = document.getElementById('gender');
+            const userSearch = document.getElementById('userSearch');
+            const testTypeFilter = document.getElementById('testTypeFilter');
+            const dateFilter = document.getElementById('dateFilter');
+            const totalUsersEl = document.getElementById('totalUsers');
+            const eqTestsEl = document.getElementById('eqTests');
+            const anxietyTestsEl = document.getElementById('anxietyTests');
+            const usersList = document.getElementById('usersList');
+            const userDetails = document.getElementById('userDetails');
+            const userTests = document.getElementById('userTests');
             
             const ADMIN_PASSWORD = "admin123";
-            
-            // Vérifier si l'utilisateur a déjà passé un test
-            function hasUserTakenTest() {
-                return localStorage.getItem('testTaken') === 'true';
-            }
-            
-            // Désactiver l'interface si test déjà passé
-            function disableTestInterface() {
-                document.querySelectorAll('.test-btn').forEach(btn => {
-                    btn.classList.add('disabled');
-                    btn.disabled = true;
-                });
-                emailContainer.style.display = 'none';
-                alreadyTakenMessage.style.display = 'block';
-            }
             
             // Afficher le panneau admin
             document.querySelector('.admin-panel').style.display = 'block';
             
-            // Gestion de l'admin
-            adminBtn.addEventListener('click', function() {
-                adminLogin.style.display = 'block';
-            });
-            
-            loginBtn.addEventListener('click', function() {
-                if (adminPassword.value === ADMIN_PASSWORD) {
-                    adminLogin.style.display = 'none';
-                    adminResults.style.display = 'block';
-                    loadResults();
-                } else {
-                    loginError.textContent = "Incorrect password";
-                }
-            });
-            
-            logoutBtn.addEventListener('click', function() {
-                adminResults.style.display = 'none';
-                adminPassword.value = '';
-                loginError.textContent = '';
-            });
-            
-            exportBtn.addEventListener('click', function() {
-                exportToCSV();
-            });
-            
-            manualSyncBtn.addEventListener('click', function() {
-                syncResultsWithAdmin();
-            });
-
-            // Vérifier l'unicité de l'email dans Firebase
-            async function isEmailUnique(email) {
-                if (!email || email === 'Anonymous') return true;
-                
-                try {
-                    const snapshot = await db.collection("testResults")
-                                          .where("email", "==", email)
-                                          .limit(1)
-                                          .get();
-                    return snapshot.empty;
-                } catch (error) {
-                    console.error("Error checking email:", error);
-                    return true; // En cas d'erreur, laisser passer
-                }
-            }
-
             // Initialiser les tests
             function initTest(testType) {
-                if (hasUserTakenTest()) {
-                    disableTestInterface();
-                    return;
-                }
-                
                 const form = document.getElementById(`${testType}Form`);
                 const questions = Array.from(form.querySelectorAll('.question'));
                 const nextBtn = document.getElementById(`${testType}NextBtn`);
@@ -1039,14 +1229,12 @@
                 };
 
                 // Gestion de la soumission
-                form.onsubmit = async function(e) {
+                form.onsubmit = function(e) {
                     e.preventDefault();
                     
-                    const email = document.getElementById('userEmail').value || 'Anonymous';
-                    
-                    // Vérifier l'unicité de l'email
-                    if (email !== 'Anonymous' && !(await isEmailUnique(email))) {
-                        alert('Cet email a déjà été utilisé pour passer le test. Une seule tentative est autorisée par email.');
+                    // Vérifier les informations personnelles
+                    if (!firstNameInput.value || !lastNameInput.value) {
+                        alert('Please fill in your first name and last name before submitting.');
                         return;
                     }
                     
@@ -1060,6 +1248,10 @@
             // Calcul du score
             async function calculateScore(testType) {
                 const email = document.getElementById('userEmail').value || 'Anonymous';
+                const firstName = firstNameInput.value;
+                const lastName = lastNameInput.value;
+                const gender = genderInput.value || 'Unknown';
+                
                 const inputs = document.querySelectorAll(`#${testType}Form input[type="radio"]:checked`);
                 let score = 0;
                 let scoreDetails = [];
@@ -1118,6 +1310,9 @@
                             </ul>
                         `;
                     }
+                    
+                    // Afficher les détails du score
+                    document.getElementById('eqScoreDetails').textContent = scoreDetails.join('\n');
                 } else {
                     if (score >= 20) {
                         level = "High Anxiety";
@@ -1156,11 +1351,17 @@
                             </ul>
                         `;
                     }
+                    
+                    // Afficher les détails du score
+                    document.getElementById('anxietyScoreDetails').textContent = scoreDetails.join('\n');
                 }
 
                 // Sauvegarder le résultat
                 const testResult = {
                     email: email,
+                    firstName: firstName,
+                    lastName: lastName,
+                    gender: gender,
                     score: score,
                     level: level,
                     date: new Date().toLocaleString(),
@@ -1170,20 +1371,14 @@
                 
                 try {
                     await db.collection("testResults").add(testResult);
-                    
-                    // Marquer comme test effectué
-                    localStorage.setItem('testTaken', 'true');
-                    disableTestInterface();
-                    
                     showResults(testType, level, message, details, advice, scoreDetails);
+                    syncResultsWithAdmin();
                 } catch (error) {
                     console.error("Error saving to Firestore:", error);
                     // Fallback to localStorage
                     let allResults = JSON.parse(localStorage.getItem('testResults')) || [];
                     allResults.push(testResult);
                     localStorage.setItem('testResults', JSON.stringify(allResults));
-                    localStorage.setItem('testTaken', 'true');
-                    disableTestInterface();
                     showResults(testType, level, message, details, advice, scoreDetails);
                 }
             }
@@ -1206,43 +1401,160 @@
                 adviceElement.innerHTML = advice;
             }
 
-            // Charger les résultats
-            async function loadResults() {
-                const resultsList = document.getElementById('resultsList');
-                resultsList.innerHTML = '<p>Loading results...</p>';
-
+            // Charger les résultats organisés
+            async function loadOrganizedResults() {
+                usersList.innerHTML = '<p>Loading users...</p>';
+                userDetails.innerHTML = '<div class="user-header"><h3>Select a user to view details</h3></div>';
+                
                 try {
-                    const snapshot = await db.collection("testResults")
-                                          .orderBy("timestamp", "desc")
-                                          .limit(100)
-                                          .get();
+                    let query = db.collection("testResults").orderBy("timestamp", "desc").limit(500);
+                    
+                    // Appliquer les filtres
+                    if (testTypeFilter.value !== 'all') {
+                        query = query.where("testType", "==", testTypeFilter.value);
+                    }
+                    
+                    if (dateFilter.value !== 'all') {
+                        const now = new Date();
+                        let startDate;
+                        
+                        if (dateFilter.value === 'today') {
+                            startDate = new Date(now.setHours(0, 0, 0, 0));
+                        } else if (dateFilter.value === 'week') {
+                            const day = now.getDay();
+                            const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+                            startDate = new Date(now.setDate(diff));
+                            startDate.setHours(0, 0, 0, 0);
+                        } else if (dateFilter.value === 'month') {
+                            startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                        }
+                        
+                        if (startDate) {
+                            query = query.where("timestamp", ">=", startDate);
+                        }
+                    }
+                    
+                    const snapshot = await query.get();
                     
                     if (snapshot.empty) {
-                        resultsList.innerHTML = '<p>No test results yet.</p>';
+                        usersList.innerHTML = '<p>No test results yet.</p>';
+                        updateStats(0, 0, 0);
                         return;
                     }
                     
-                    resultsList.innerHTML = '';
+                    // Grouper les résultats par utilisateur
+                    const users = {};
+                    let eqCount = 0, anxietyCount = 0;
+                    
                     snapshot.forEach(doc => {
                         const result = doc.data();
-                        const resultDiv = document.createElement('div');
-                        resultDiv.className = 'test-result';
-                        resultDiv.innerHTML = `
-                            <p><strong>Test:</strong> ${result.testType.toUpperCase()}</p>
-                            <p><strong>Email:</strong> ${result.email || 'Anonymous'}</p>
-                            <p><strong>Result:</strong> ${result.level}</p>
-                            <p><strong>Score:</strong> ${result.score}</p>
-                            <p><strong>Date:</strong> ${new Date(result.date).toLocaleString()}</p>
-                            <hr>
-                        `;
-                        resultsList.appendChild(resultDiv);
+                        const userKey = `${result.email}-${result.firstName}-${result.lastName}`;
+                        
+                        if (!users[userKey]) {
+                            users[userKey] = {
+                                email: result.email,
+                                firstName: result.firstName,
+                                lastName: result.lastName,
+                                gender: result.gender,
+                                tests: []
+                            };
+                        }
+                        
+                        users[userKey].tests.push(result);
+                        
+                        // Compter les tests
+                        if (result.testType === 'eq') eqCount++;
+                        else if (result.testType === 'anxiety') anxietyCount++;
                     });
+                    
+                    updateStats(Object.keys(users).length, eqCount, anxietyCount);
+                    displayUserList(users);
+                    
                 } catch (error) {
                     console.error("Error loading results:", error);
-                    resultsList.innerHTML = '<p>Error loading results. Please try again.</p>';
+                    usersList.innerHTML = '<p>Error loading results. Please try again.</p>';
                 }
             }
-
+            
+            // Afficher la liste des utilisateurs
+            function displayUserList(users) {
+                usersList.innerHTML = '';
+                
+                const userArray = Object.values(users);
+                
+                if (userArray.length === 0) {
+                    usersList.innerHTML = '<p>No users found matching your criteria</p>';
+                    return;
+                }
+                
+                userArray.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'user-item';
+                    userDiv.innerHTML = `
+                        <strong>${user.firstName} ${user.lastName}</strong><br>
+                        <small>${user.email || 'No email'}</small><br>
+                        <small>${user.tests.length} test(s)</small>
+                    `;
+                    
+                    userDiv.addEventListener('click', () => {
+                        document.querySelectorAll('.user-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        userDiv.classList.add('active');
+                        displayUserDetails(user);
+                    });
+                    
+                    usersList.appendChild(userDiv);
+                });
+            }
+            
+            // Afficher les détails d'un utilisateur
+            function displayUserDetails(user) {
+                userDetails.innerHTML = `
+                    <div class="user-header">
+                        <h3>${user.firstName} ${user.lastName}</h3>
+                        <p>Email: ${user.email || 'Not provided'}</p>
+                        <p>Gender: ${user.gender || 'Not specified'}</p>
+                    </div>
+                    <div class="user-tests" id="userTests"></div>
+                `;
+                
+                const userTestsContainer = document.getElementById('userTests');
+                userTestsContainer.innerHTML = '';
+                
+                // Trier les tests par date (du plus récent au plus ancien)
+                user.tests.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                user.tests.forEach(test => {
+                    const testDiv = document.createElement('div');
+                    testDiv.className = 'test-item';
+                    
+                    const testDate = new Date(test.date).toLocaleString();
+                    const isEQ = test.testType === 'eq';
+                    
+                    testDiv.innerHTML = `
+                        <h4>${isEQ ? 'Emotional Intelligence Test' : 'Anxiety Test'}</h4>
+                        <div class="test-meta">
+                            <span>Score: ${test.score}</span>
+                            <span>Result: ${test.level}</span>
+                            <span>Date: ${testDate}</span>
+                        </div>
+                        <p>${isEQ ? 
+                            'Emotional intelligence assessment results' : 
+                            'Anxiety level evaluation results'}</p>
+                    `;
+                    
+                    userTestsContainer.appendChild(testDiv);
+                });
+            }
+            
+            // Mettre à jour les statistiques
+            function updateStats(totalUsers, eqTests, anxietyTests) {
+                totalUsersEl.textContent = totalUsers;
+                eqTestsEl.textContent = eqTests;
+                anxietyTestsEl.textContent = anxietyTests;
+            }
+            
             // Exporter en CSV
             async function exportToCSV() {
                 try {
@@ -1252,10 +1564,12 @@
                         return;
                     }
                     
-                    let csv = 'Test Type,Email,Result,Score,Date\n';
+                    let csv = 'First Name,Last Name,Gender,Email,Test Type,Result,Score,Date\n';
                     snapshot.forEach(doc => {
                         const result = doc.data();
-                        csv += `${result.testType},${result.email || 'Anonymous'},"${result.level}",${result.score},${result.date}\n`;
+                        csv += `"${result.firstName || ''}","${result.lastName || ''}","${result.gender || ''}",`;
+                        csv += `"${result.email || 'Anonymous'}","${result.testType}","${result.level}",`;
+                        csv += `${result.score},"${result.date}"\n`;
                     });
                     
                     const blob = new Blob([csv], { type: 'text/csv' });
@@ -1280,7 +1594,7 @@
                     setTimeout(() => {
                         syncNotification.style.display = 'none';
                     }, 3000);
-                    loadResults();
+                    loadOrganizedResults();
                 }
             }
 
@@ -1306,13 +1620,8 @@
                 startAutoSync();
             }
 
-            // Réinitialiser les tests (admin seulement)
+            // Réinitialiser les tests
             function resetTest(testType) {
-                if (adminResults.style.display !== 'block') {
-                    alert('Seul un administrateur peut réinitialiser les tests.');
-                    return;
-                }
-                
                 const form = document.getElementById(`${testType}Form`);
                 const testContainer = document.getElementById(`${testType}Test`);
                 const resultContainer = document.getElementById(`${testType}Result`);
@@ -1352,14 +1661,46 @@
                 }
             }
 
-            // Écouteurs d'événements
+            // Gestion de l'admin
+            adminBtn.addEventListener('click', function() {
+                adminLogin.style.display = 'block';
+            });
+            
+            loginBtn.addEventListener('click', function() {
+                if (adminPassword.value === ADMIN_PASSWORD) {
+                    adminLogin.style.display = 'none';
+                    adminResults.style.display = 'block';
+                    loadOrganizedResults();
+                } else {
+                    loginError.textContent = "Incorrect password";
+                }
+            });
+            
+            logoutBtn.addEventListener('click', function() {
+                adminResults.style.display = 'none';
+                adminPassword.value = '';
+                loginError.textContent = '';
+            });
+            
+            // Écouteurs d'événements pour les filtres
+            testTypeFilter.addEventListener('change', loadOrganizedResults);
+            dateFilter.addEventListener('change', loadOrganizedResults);
+            userSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const userItems = document.querySelectorAll('.user-item');
+                
+                userItems.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+            
+            exportBtn.addEventListener('click', exportToCSV);
+            manualSyncBtn.addEventListener('click', syncResultsWithAdmin);
+
+            // Écouteurs d'événements pour les tests
             eqBtn.addEventListener('click', () => switchTest('eq'));
             anxietyBtn.addEventListener('click', () => switchTest('anxiety'));
-
-            // Vérifier au chargement si test déjà passé
-            if (hasUserTakenTest()) {
-                disableTestInterface();
-            }
 
             // Initialisation
             switchTest('eq');
