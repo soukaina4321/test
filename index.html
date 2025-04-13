@@ -1410,12 +1410,12 @@
             
             // Initialiser les tests
             function initTest(testType) {
-                const form = document.getElementById(${testType}Form);
+                const form = document.getElementById(`${testType}Form`);
                 const questions = Array.from(form.querySelectorAll('.question'));
-                const nextBtn = document.getElementById(${testType}NextBtn);
-                const submitBtn = document.getElementById(${testType}SubmitBtn);
-                const progressBar = document.getElementById(${testType}Progress);
-                const progressText = document.getElementById(${testType}ProgressText);
+                const nextBtn = document.getElementById(`${testType}NextBtn`);
+                const submitBtn = document.getElementById(`${testType}SubmitBtn`);
+                const progressBar = document.getElementById(`${testType}Progress`);
+                const progressText = document.getElementById(`${testType}ProgressText`);
                 
                 let currentQuestionIndex = 0;
 
@@ -1425,8 +1425,8 @@
                     questions[index].classList.add('active');
                     
                     const progressPercent = ((index + 1) / questions.length) * 100;
-                    progressBar.style.width = ${progressPercent}%;
-                    progressText.textContent = Question ${index + 1} of ${questions.length};
+                    progressBar.style.width = `${progressPercent}%`;
+                    progressText.textContent = `Question ${index + 1} of ${questions.length}`;
                     
                     if (index === questions.length - 1) {
                         nextBtn.style.display = 'none';
@@ -1476,7 +1476,7 @@
                 const lastName = lastNameInput.value;
                 const gender = genderMale.checked ? "Male" : "Female";
                 
-                const inputs = document.querySelectorAll(#${testType}Form input[type="radio"]:checked);
+                const inputs = document.querySelectorAll(`#${testType}Form input[type="radio"]:checked`);
                 let score = 0;
                 let scoreDetails = [];
                 
@@ -1486,9 +1486,9 @@
                     
                     if ((testType === 'eq' && index === 5) || (testType === 'anxiety' && index === 5)) {
                         questionValue = 6 - questionValue;
-                        scoreDetails.push(Q${index+1}: ${originalValue} → ${questionValue} pts (reversed));
+                        scoreDetails.push(`Q${index+1}: ${originalValue} → ${questionValue} pts (reversed)`);
                     } else {
-                        scoreDetails.push(Q${index+1}: ${questionValue} pts);
+                        scoreDetails.push(`Q${index+1}: ${questionValue} pts`);
                     }
                     
                     score += questionValue;
@@ -1610,4 +1610,387 @@
                     console.error("Error saving to Firestore:", error);
                     // Fallback to localStorage
                     let allResults = JSON.parse(localStorage.getItem('testResults')) || [];
-                    allR
+                    allResults.push(testResult);
+                    localStorage.setItem('testResults', JSON.stringify(allResults));
+                    showResults(testType, level, message, details, advice, scoreDetails);
+                }
+            }
+
+            // Afficher les résultats
+            function showResults(testType, level, message, details, advice, scoreDetails) {
+                const testContainer = document.getElementById(`${testType}Test`);
+                const resultContainer = document.getElementById(`${testType}Result`);
+                const finalLevel = document.getElementById(`${testType}FinalLevel`);
+                const messageElement = document.getElementById(`${testType}Message`);
+                const detailsElement = document.getElementById(`${testType}Details`);
+                const adviceElement = document.getElementById(`${testType}Advice`);
+                
+                testContainer.style.display = 'none';
+                resultContainer.style.display = 'block';
+                
+                finalLevel.textContent = level;
+                messageElement.textContent = message;
+                detailsElement.textContent = details;
+                adviceElement.innerHTML = advice;
+            }
+
+            // Charger les résultats organisés
+            async function loadOrganizedResults() {
+                usersList.innerHTML = '<p>Loading users...</p>';
+                userDetails.innerHTML = '<div class="user-header"><h3>Select a user to view details</h3></div>';
+                
+                try {
+                    let query = db.collection("testResults").orderBy("timestamp", "desc").limit(500);
+                    
+                    // Appliquer les filtres
+                    if (testTypeFilter.value !== 'all') {
+                        query = query.where("testType", "==", testTypeFilter.value);
+                    }
+                    
+                    if (dateFilter.value !== 'all') {
+                        const now = new Date();
+                        let startDate;
+                        
+                        if (dateFilter.value === 'today') {
+                            startDate = new Date(now.setHours(0, 0, 0, 0));
+                        } else if (dateFilter.value === 'week') {
+                            const day = now.getDay();
+                            const diff = now.getDate() - day + (day === 0 ? -6 : 1);
+                            startDate = new Date(now.setDate(diff));
+                            startDate.setHours(0, 0, 0, 0);
+                        } else if (dateFilter.value === 'month') {
+                            startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                        }
+                        
+                        if (startDate) {
+                            query = query.where("timestamp", ">=", startDate);
+                        }
+                    }
+                    
+                    const snapshot = await query.get();
+                    
+                    if (snapshot.empty) {
+                        usersList.innerHTML = '<p>No test results yet.</p>';
+                        updateStats(0, 0, 0);
+                        return;
+                    }
+                    
+                    // Grouper les résultats par utilisateur
+                    const users = {};
+                    let eqCount = 0, anxietyCount = 0;
+                    
+                    snapshot.forEach(doc => {
+                        const result = doc.data();
+                        const userKey = `${result.email}-${result.firstName}-${result.lastName}`;
+                        
+                        if (!users[userKey]) {
+                            users[userKey] = {
+                                email: result.email,
+                                firstName: result.firstName,
+                                lastName: result.lastName,
+                                gender: result.gender,
+                                tests: []
+                            };
+                        }
+                        
+                        users[userKey].tests.push(result);
+                        
+                        // Compter les tests
+                        if (result.testType === 'eq') eqCount++;
+                        else if (result.testType === 'anxiety') anxietyCount++;
+                    });
+                    
+                    updateStats(Object.keys(users).length, eqCount, anxietyCount);
+                    displayUserList(users);
+                    
+                } catch (error) {
+                    console.error("Error loading results:", error);
+                    usersList.innerHTML = '<p>Error loading results. Please try again.</p>';
+                }
+            }
+            
+            // Afficher la liste des utilisateurs
+            function displayUserList(users) {
+                usersList.innerHTML = '';
+                
+                const userArray = Object.values(users);
+                
+                if (userArray.length === 0) {
+                    usersList.innerHTML = '<p>No users found matching your criteria</p>';
+                    return;
+                }
+                
+                userArray.forEach(user => {
+                    const userDiv = document.createElement('div');
+                    userDiv.className = 'user-item';
+                    userDiv.innerHTML = `
+                        <strong>${user.firstName} ${user.lastName}</strong><br>
+                        <small>${user.email || 'No email'}</small><br>
+                        <small>${user.tests.length} test(s)</small>
+                    `;
+                    
+                    userDiv.addEventListener('click', () => {
+                        document.querySelectorAll('.user-item').forEach(item => {
+                            item.classList.remove('active');
+                        });
+                        userDiv.classList.add('active');
+                        displayUserDetails(user);
+                    });
+                    
+                    usersList.appendChild(userDiv);
+                });
+            }
+            
+            // Afficher les détails d'un utilisateur
+            function displayUserDetails(user) {
+                userDetails.innerHTML = `
+                    <div class="user-header">
+                        <h3>${user.firstName} ${user.lastName}</h3>
+                        <p>Email: ${user.email || 'Not provided'}</p>
+                        <p>Gender: ${user.gender || 'Not specified'}</p>
+                    </div>
+                    <div class="user-tests" id="userTests"></div>
+                `;
+                
+                const userTestsContainer = document.getElementById('userTests');
+                userTestsContainer.innerHTML = '';
+                
+                // Trier les tests par date (du plus récent au plus ancien)
+                user.tests.sort((a, b) => new Date(b.date) - new Date(a.date));
+                
+                user.tests.forEach(test => {
+                    const testDiv = document.createElement('div');
+                    testDiv.className = 'test-item';
+                    
+                    const testDate = new Date(test.date).toLocaleString();
+                    const isEQ = test.testType === 'eq';
+                    
+                    testDiv.innerHTML = `
+                        <h4>${isEQ ? 'Emotional Intelligence Test' : 'Anxiety Test'}</h4>
+                        <div class="test-meta">
+                            <span>Score: ${test.score}</span>
+                            <span>Result: ${test.level}</span>
+                            <span>Date: ${testDate}</span>
+                        </div>
+                        <p>${isEQ ? 
+                            'Emotional intelligence assessment results' : 
+                            'Anxiety level evaluation results'}</p>
+                    `;
+                    
+                    userTestsContainer.appendChild(testDiv);
+                });
+            }
+            
+            // Mettre à jour les statistiques
+            function updateStats(totalUsers, eqTests, anxietyTests) {
+                totalUsersEl.textContent = totalUsers;
+                eqTestsEl.textContent = eqTests;
+                anxietyTestsEl.textContent = anxietyTests;
+            }
+            
+            // Exporter en CSV
+            async function exportToCSV() {
+                try {
+                    const snapshot = await db.collection("testResults").get();
+                    if (snapshot.empty) {
+                        alert('No results to export');
+                        return;
+                    }
+                    
+                    let csv = 'First Name,Last Name,Gender,Email,Test Type,Result,Score,Date\n';
+                    snapshot.forEach(doc => {
+                        const result = doc.data();
+                        csv += `"${result.firstName || ''}","${result.lastName || ''}","${result.gender || ''}",`;
+                        csv += `"${result.email || 'Anonymous'}","${result.testType}","${result.level}",`;
+                        csv += `${result.score},"${result.date}"\n`;
+                    });
+                    
+                    const blob = new Blob([csv], { type: 'text/csv' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.setAttribute('hidden', '');
+                    a.setAttribute('href', url);
+                    a.setAttribute('download', 'psychological_test_results.csv');
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                } catch (error) {
+                    console.error("Export failed:", error);
+                    alert('Export failed. Please try again.');
+                }
+            }
+
+            // Fonction pour supprimer tous les tests
+            async function deleteAllTestHistory() {
+                try {
+                    // Supprimer de Firestore
+                    const snapshot = await db.collection("testResults").get();
+                    const batch = db.batch();
+                    
+                    snapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    
+                    await batch.commit();
+                    
+                    // Supprimer du localStorage
+                    localStorage.removeItem('testResults');
+                    
+                    // Recharger les résultats
+                    loadOrganizedResults();
+                    
+                    // Afficher une notification
+                    syncNotification.textContent = "All test history has been deleted";
+                    syncNotification.style.display = 'block';
+                    setTimeout(() => {
+                        syncNotification.style.display = 'none';
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error("Error deleting test history:", error);
+                    syncNotification.textContent = "Error deleting test history";
+                    syncNotification.style.display = 'block';
+                    setTimeout(() => {
+                        syncNotification.style.display = 'none';
+                    }, 3000);
+                }
+            }
+
+            // Synchronisation
+            function syncResultsWithAdmin() {
+                if (adminResults.style.display === 'block') {
+                    syncNotification.textContent = "Test results synchronized";
+                    syncNotification.style.display = 'block';
+                    setTimeout(() => {
+                        syncNotification.style.display = 'none';
+                    }, 3000);
+                    loadOrganizedResults();
+                }
+            }
+
+            // Auto-sync
+            let autoSyncInterval;
+            function startAutoSync() {
+                autoSyncInterval = setInterval(syncResultsWithAdmin, 5000);
+            }
+            
+            function stopAutoSync() {
+                clearInterval(autoSyncInterval);
+            }
+            
+            autoSyncCheckbox.addEventListener('change', function() {
+                if (this.checked) {
+                    startAutoSync();
+                } else {
+                    stopAutoSync();
+                }
+            });
+            
+            if (autoSyncCheckbox.checked) {
+                startAutoSync();
+            }
+
+            // Changer de test
+            function switchTest(activeTest) {
+                // Vérifier si l'utilisateur a déjà passé le test
+                if ((activeTest === 'eq' && userHasTakenEQTest) || 
+                    (activeTest === 'anxiety' && userHasTakenAnxietyTest)) {
+                    return;
+                }
+                
+                document.querySelectorAll('.test-container, .result-container').forEach(el => {
+                    el.style.display = 'none';
+                });
+                
+                eqBtn.classList.remove('active');
+                anxietyBtn.classList.remove('active');
+                
+                if (activeTest === 'eq') {
+                    eqTest.style.display = 'block';
+                    eqBtn.classList.add('active');
+                    initTest('eq');
+                } else {
+                    anxietyTest.style.display = 'block';
+                    anxietyBtn.classList.add('active');
+                    initTest('anxiety');
+                }
+            }
+
+            // Gestion de l'admin
+            adminBtn.addEventListener('click', function() {
+                adminLogin.style.display = 'block';
+            });
+            
+            loginBtn.addEventListener('click', function() {
+                if (adminPassword.value === ADMIN_PASSWORD) {
+                    adminLogin.style.display = 'none';
+                    adminResults.style.display = 'block';
+                    loadOrganizedResults();
+                } else {
+                    loginError.textContent = "Incorrect password";
+                }
+            });
+            
+            logoutBtn.addEventListener('click', function() {
+                adminResults.style.display = 'none';
+                adminPassword.value = '';
+                loginError.textContent = '';
+            });
+            
+            // Gestion de la suppression d'historique
+            deleteHistoryBtn.addEventListener('click', function() {
+                confirmationDialog.style.display = 'block';
+            });
+            
+            cancelDeleteBtn.addEventListener('click', function() {
+                confirmationDialog.style.display = 'none';
+            });
+            
+            confirmDeleteBtn.addEventListener('click', async function() {
+                confirmationDialog.style.display = 'none';
+                await deleteAllTestHistory();
+            });
+            
+            // Écouteurs d'événements pour les filtres
+            testTypeFilter.addEventListener('change', loadOrganizedResults);
+            dateFilter.addEventListener('change', loadOrganizedResults);
+            userSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                const userItems = document.querySelectorAll('.user-item');
+                
+                userItems.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? 'block' : 'none';
+                });
+            });
+            
+            // Vérifier les tests existants lorsque l'email change
+            userEmailInput.addEventListener('change', checkUserTests);
+            
+            exportBtn.addEventListener('click', exportToCSV);
+            manualSyncBtn.addEventListener('click', syncResultsWithAdmin);
+
+            // Écouteurs d'événements pour les tests
+            eqBtn.addEventListener('click', () => {
+                if (!userHasTakenEQTest) {
+                    switchTest('eq');
+                }
+            });
+            
+            anxietyBtn.addEventListener('click', () => {
+                if (!userHasTakenAnxietyTest) {
+                    switchTest('anxiety');
+                }
+            });
+
+            // Initialisation
+            switchTest('eq');
+            
+            // Vérifier si l'email est déjà rempli (par exemple après rafraîchissement)
+            if (userEmailInput.value) {
+                checkUserTests();
+            }
+        });
+    </script>
+</body>
+</html> 
