@@ -471,6 +471,20 @@
             font-size: 0.9rem;
             color: #666;
             margin-bottom: 5px;
+            flex-wrap: wrap;
+        }
+
+        .test-meta span {
+            background: #f0f0f0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+        }
+
+        .test-meta strong {
+            margin-right: 5px;
+            color: var(--primary);
         }
 
         .search-box {
@@ -1590,7 +1604,7 @@
                     gender: gender,
                     score: score,
                     level: level,
-                    date: new Date().toLocaleString(),
+                    date: new Date().toISOString(),
                     testType: testType,
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 };
@@ -1725,10 +1739,19 @@
                 userArray.forEach(user => {
                     const userDiv = document.createElement('div');
                     userDiv.className = 'user-item';
+                    
+                    // Trouver la date du test le plus récent
+                    const latestTest = user.tests.reduce((latest, test) => {
+                        const testDate = new Date(test.date);
+                        return !latest || testDate > new Date(latest.date) ? test : latest;
+                    }, null);
+                    
+                    const latestDate = latestTest ? new Date(latestTest.date).toLocaleDateString('fr-FR') : 'N/A';
+                    
                     userDiv.innerHTML = `
                         <strong>${user.firstName} ${user.lastName}</strong><br>
                         <small>${user.email || 'No email'}</small><br>
-                        <small>${user.tests.length} test(s)</small>
+                        <small>${user.tests.length} test(s) - Last test: ${latestDate}</small>
                     `;
                     
                     userDiv.addEventListener('click', () => {
@@ -1764,15 +1787,24 @@
                     const testDiv = document.createElement('div');
                     testDiv.className = 'test-item';
                     
-                    const testDate = new Date(test.date).toLocaleString();
+                    // Formater la date pour un meilleur affichage
+                    const testDate = new Date(test.date);
+                    const formattedDate = testDate.toLocaleDateString('fr-FR', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    });
+                    
                     const isEQ = test.testType === 'eq';
                     
                     testDiv.innerHTML = `
                         <h4>${isEQ ? 'Emotional Intelligence Test' : 'Anxiety Test'}</h4>
                         <div class="test-meta">
-                            <span>Score: ${test.score}</span>
-                            <span>Result: ${test.level}</span>
-                            <span>Date: ${testDate}</span>
+                            <span><strong>Date:</strong> ${formattedDate}</span>
+                            <span><strong>Score:</strong> ${test.score}</span>
+                            <span><strong>Result:</strong> ${test.level}</span>
                         </div>
                         <p>${isEQ ? 
                             'Emotional intelligence assessment results' : 
@@ -1995,4 +2027,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
